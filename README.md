@@ -1,4 +1,4 @@
-# Aplicativo PaySplip
+# Aplicativo Split
 
 O PaySplit é uma solução inovadora criada para facilitar a divisão de contas em restaurantes e bares. Compatível com vários dispositivos, a aplicação simplifica a gestão e o compartilhamento de pagamentos, garantindo uma experiência eficiente e livre de erros para clientes e estabelecimentos.
 
