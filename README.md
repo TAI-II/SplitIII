@@ -25,24 +25,24 @@ Slogan: "Pagamentos Simplificados, Contas Divididas, Experiência Perfeita."
 
 ### Sumário Documentação 
 
-- 1. Produto
-    - [1.1 Visão Geral do Produto](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/1.%20Produto/1.1.%20Vis%C3%A3o%20Geral%20do%20Produto.md)
-    - [1.2 Canva](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/1.%20Produto/1.2.%20Canva.md)
-- 2. Fluxos
-    - [2.1 Fluxos Definidos](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/2.%20Fluxos/2.1.%20Fluxos%20definidos.md)
-- 3. Tecnologias
-    - [3.1 Tecnologias Frontend](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/3.%20Tecnologias/3.1.%20Tecnologias%20Font.md)
-    - [3.2 Tecnologias Backend](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/3.%20Tecnologias/3.2.%20Tecnologias%20Back.md)
-- 4. Arquitetura
-    - [4.1 Arquitetura Definida](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/4.%20Arquitetura/4.1.%20Arquitetura%20Definida.md)
-- 5. Design
-    - [5.1 Logo](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/5.%20Design/5.1.%20Logo.md)
-    - [5.2 Componentes UI](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/5.%20Design/5.2.%20Componentes%20UI.md)
-- 6. Levantamento
-    - [6.1 Requisitos](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/6.%20Levantamento/6.1.%20Requisitos.md)
-    - [6.2 Descritivo Funcional](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/6.%20Levantamento/6.2.%20Descritivo%20Funcional.md)
-- 7. Fotos
-    - [7.1 Diretotio de fotos](https://github.com/TAI-II/Split/tree/main/Documenta%C3%A7%C3%A3o/7.%20Fotos)
+1. Produto
+- [1.1 Visão Geral do Produto](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/1.%20Produto/1.1.%20Vis%C3%A3o%20Geral%20do%20Produto.md)
+- [1.2 Canva](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/1.%20Produto/1.2.%20Canva.md)
+2. Fluxos
+- [2.1 Fluxos Definidos](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/2.%20Fluxos/2.1.%20Fluxos%20definidos.md)
+3. Tecnologias
+- [3.1 Tecnologias Frontend](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/3.%20Tecnologias/3.1.%20Tecnologias%20Font.md)
+- [3.2 Tecnologias Backend](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/3.%20Tecnologias/3.2.%20Tecnologias%20Back.md)
+4. Arquitetura
+- [4.1 Arquitetura Definida](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/4.%20Arquitetura/4.1.%20Arquitetura%20Definida.md)
+5. Design
+- [5.1 Logo](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/5.%20Design/5.1.%20Logo.md)
+- [5.2 Componentes UI](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/5.%20Design/5.2.%20Componentes%20UI.md)
+6. Levantamento
+- [6.1 Requisitos](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/6.%20Levantamento/6.1.%20Requisitos.md)
+- [6.2 Descritivo Funcional](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/6.%20Levantamento/6.2.%20Descritivo%20Funcional.md)
+7. Fotos
+s- [7.1 Diretotio de fotos](https://github.com/TAI-II/Split/tree/main/Documenta%C3%A7%C3%A3o/7.%20Fotos)
 
 
 ## Objetivos:
