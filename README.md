@@ -21,3 +21,9 @@ Slogan: "Pagamentos Simplificados, Contas Divididas, Experiência Perfeita."
 - Professor: Luiz Alberto Ferreira Gomes
 - Código da Disciplina: 5327.1.01
 - Formato: Graduação Presencial Síncrona - 2024/2
+
+## Documentação Sumário
+
+
+## Tecnologias Empregadas 
+
