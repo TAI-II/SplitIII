@@ -18,9 +18,20 @@ export class TabsController {
   ) {}
 
   @Post('/process')
-  @ApiBody({ type: ProcessTabDto, examples: { a: { value: { image: 'https://example.com/image.png', sessionId: 1 } } } })
-  @ApiOperation({ summary: 'Processa uma tab, pega a imagem, faz upload, transcreve pra json e salva na sessão' })
-  @ApiResponse({ status: 201, description: 'The tab has been successfully processed.' })
+  @ApiBody({
+    type: ProcessTabDto,
+    examples: {
+      a: { value: { image: 'https://example.com/image.png', sessionId: 1 } },
+    },
+  })
+  @ApiOperation({
+    summary:
+      'Processa uma tab, pega a imagem, faz upload, transcreve pra json e salva na sessão',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The tab has been successfully processed.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async processTab(@Body() processTabDto: ProcessTabDto) {
     this.logger.log(`[-] Processing tab: ${JSON.stringify(processTabDto)}`);

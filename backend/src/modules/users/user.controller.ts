@@ -12,8 +12,11 @@ export class UserController {
 
   @Post('')
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, description: 'The user has been successfully created.' })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })  
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully created.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
   create(@Body() createUserDto: CreateUserDto) {
     this.logger.log(`[-] Creating new user: ${JSON.stringify(createUserDto)}`);
     return this.userService.create(createUserDto);
@@ -21,7 +24,10 @@ export class UserController {
 
   @Get('')
   @ApiOperation({ summary: 'Retrieve all users' })
-  @ApiResponse({ status: 200, description: 'The users have been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The users have been successfully retrieved.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   findAll() {
     this.logger.log('[-] Retrieving all users');
@@ -30,7 +36,10 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a user by id' })
-  @ApiResponse({ status: 200, description: 'The user has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully retrieved.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   findOne(@Param('id') id: string) {
     this.logger.log(`[-] Retrieving user with id: ${id}`);

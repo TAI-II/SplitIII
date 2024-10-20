@@ -10,8 +10,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OpenaiService } from '../openai/openai.service';
-import { TabsService } from '../tabs/tabs.service';
 import { UserService } from '../users/user.service';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
@@ -29,7 +27,10 @@ export class SessionsController {
 
   @Post('')
   @ApiOperation({ summary: 'Create a new session' })
-  @ApiResponse({ status: 201, description: 'The session has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The session has been successfully created.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async create(@Body() createSessionDto: CreateSessionDto) {
     this.logger.log(
@@ -53,7 +54,10 @@ export class SessionsController {
 
   @Get('')
   @ApiOperation({ summary: 'Retrieve all sessions' })
-  @ApiResponse({ status: 200, description: 'The sessions have been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sessions have been successfully retrieved.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   findAll() {
     this.logger.log('[-] Retrieving all sessions');
@@ -62,7 +66,10 @@ export class SessionsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a session by id' })
-  @ApiResponse({ status: 200, description: 'The session has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully retrieved.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   findOne(@Param('id') id: string) {
     this.logger.log(`[-] Retrieving session with id: ${id}`);
@@ -71,7 +78,10 @@ export class SessionsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a session by id' })
-  @ApiResponse({ status: 200, description: 'The session has been successfully removed.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully removed.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   remove(@Param('id') id: string) {
     this.logger.log(`[-] Removing session with id: ${id}`);
@@ -80,7 +90,10 @@ export class SessionsController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a session by id' })
-  @ApiResponse({ status: 200, description: 'The session has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully updated.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   updateCode(
     @Param('id') id: string,
@@ -94,7 +107,10 @@ export class SessionsController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a session by id' })
-  @ApiResponse({ status: 200, description: 'The session has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully updated.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
     this.logger.log(

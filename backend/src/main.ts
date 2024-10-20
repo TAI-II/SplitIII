@@ -8,13 +8,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
-  
+
   /**
    * Global Prefix
    * This is used to prefix the routes with the global prefix
    * This is useful for the frontend to know where the API is located
    * All routes will be prefixed with /api
-  */
+   */
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 

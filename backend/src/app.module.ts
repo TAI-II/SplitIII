@@ -7,7 +7,9 @@ import { TabsModule } from './modules/tabs/tabs.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://viniciusassis:KUm2RyLvJ9tGQOds@cluster0.6aj3k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'),
+    MongooseModule.forRoot(
+      'mongodb+srv://viniciusassis:KUm2RyLvJ9tGQOds@cluster0.6aj3k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+    ),
     OpenaiModule,
     SessionsModule,
     UserModule,

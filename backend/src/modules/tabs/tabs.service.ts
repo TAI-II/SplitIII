@@ -5,6 +5,4 @@ export class TabsService {
   uploadImage(image: string) {
     return image;
   }
-
-
 }

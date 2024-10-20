@@ -25,7 +25,7 @@ export class SessionsService {
     };
     const createdSession = new this.sessionModel(newSession);
     const savedSession = await createdSession.save();
-    
+
     this.logger.debug(`Session created: ${JSON.stringify(savedSession)}`);
     return savedSession;
   }
@@ -65,7 +65,10 @@ export class SessionsService {
   async update(id: string, updateSessionDto: UpdateSessionDto) {
     this.logger.log(`[-] Updating session with id: ${id}`);
 
-    const session = await this.sessionModel.findByIdAndUpdate(id, updateSessionDto);
+    const session = await this.sessionModel.findByIdAndUpdate(
+      id,
+      updateSessionDto,
+    );
 
     this.logger.debug(`[-] Session updated: ${JSON.stringify(session)}`);
     return session;
@@ -78,7 +81,7 @@ export class SessionsService {
       const session = await this.sessionModel.findByIdAndUpdate(
         id,
         { $set: updateSessionDto },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       );
 
       if (!session) {
