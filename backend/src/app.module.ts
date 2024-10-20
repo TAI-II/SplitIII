@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { OpenaiModule } from './openai/openai.module';
-import { FilesModule } from './files/files.module';
-import { WebsocketModule } from './websocket/websocket.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { OpenaiModule } from './modules/openai/openai.module';
+import { SessionsModule } from './modules/sessions/sessions.module';
+import { UserModule } from './modules/users/user.module';
+import { TabsModule } from './modules/tabs/tabs.module';
 
 @Module({
-  imports: [OpenaiModule, FilesModule, WebsocketModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    MongooseModule.forRoot(
+      'mongodb+srv://viniciusassis:KUm2RyLvJ9tGQOds@cluster0.6aj3k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+    ),
+    OpenaiModule,
+    SessionsModule,
+    UserModule,
+    TabsModule,
+  ],
 })
 export class AppModule {}
