@@ -44,19 +44,6 @@ export class SessionsController {
     });
   }
 
-  @Post('/process-tab')
-  async processTab(@Body() processTabDto: ProcessTabDto) {
-    this.logger.log(`[-] Processing tab: ${JSON.stringify(processTabDto)}`);
-    try {
-      const imageUrl = await this.tabsService.uploadImage(processTabDto.image);
-      const tab = await this.openaiService.generateTab(imageUrl);
-      await this.sessionService.patch(processTabDto.sessionId, { tab });
-    } catch (error) {
-      this.logger.error(`[-] Error processing tab: ${error}`);
-      throw new Error(error);
-    }
-  }
-
   ///////////////////////////////////////////////////
   /////            CRUD OPERATIONS              /////
   ///////////////////////////////////////////////////

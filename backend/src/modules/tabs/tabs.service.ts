@@ -6,7 +6,5 @@ export class TabsService {
     return image;
   }
 
-  linkTabToSession(sessionId: number, tabId: number) {
-    return { sessionId, tabId };
-  }
+
 }

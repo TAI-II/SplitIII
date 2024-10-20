@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { SessionsGateway } from './sessions.gateway';
 import { SessionsController } from './sessions.controller';
@@ -10,5 +10,6 @@ import { OpenaiModule } from '../openai/openai.module';
   imports: [UserModule, OpenaiModule, TabsModule],
   controllers: [SessionsController],
   providers: [SessionsGateway, SessionsService],
+  exports: [SessionsService],
 })
 export class SessionsModule {}
