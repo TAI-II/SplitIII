@@ -5,5 +5,6 @@ import { TabsController } from './tabs.controller';
 @Module({
   controllers: [TabsController],
   providers: [TabsService],
+  exports: [TabsService],
 })
 export class TabsModule {}
