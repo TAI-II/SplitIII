@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './exceptions/http-exception.filter';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -36,6 +37,20 @@ async function bootstrap() {
    * If no port is found, it will use the default port 3000
    */
   const port = process.env.PORT || 3000;
+
+  /**
+   * Swagger Setup
+   * This is used to create the Swagger documentation
+   */
+  const config = new DocumentBuilder()
+    .setTitle('Split API')
+    .setDescription('The Split API description')
+    .setVersion('1.0')
+    .addTag('split')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(port);
   Logger.log(

@@ -9,14 +9,15 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OpenaiService } from '../openai/openai.service';
+import { TabsService } from '../tabs/tabs.service';
 import { UserService } from '../users/user.service';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { ProcessTabDto } from './dto/process-tab.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { SessionsService } from './sessions.service';
-import { TabsService } from '../tabs/tabs.service';
 
+@ApiTags('sessions')
 @Controller('sessions')
 export class SessionsController {
   private readonly logger = new Logger(SessionsController.name);
@@ -29,6 +30,9 @@ export class SessionsController {
   ) {}
 
   @Post('')
+  @ApiOperation({ summary: 'Create a new session' })
+  @ApiResponse({ status: 201, description: 'The session has been successfully created.' })
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
   create(@Body() createSessionDto: CreateSessionDto) {
     this.logger.log(
       `[-] Creating new session: ${JSON.stringify(createSessionDto)}`,
