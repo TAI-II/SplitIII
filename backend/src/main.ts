@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -24,12 +25,18 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   /**
+   * Global Exception Filter
+   * This is used to handle all exceptions
+   */
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  /**
    * Global Port
    * This is used to get the port from the environment variables
    * If no port is found, it will use the default port 3000
    */
   const port = process.env.PORT || 3000;
-  
+
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
