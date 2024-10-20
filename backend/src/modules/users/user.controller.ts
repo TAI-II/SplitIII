@@ -34,6 +34,6 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   findOne(@Param('id') id: string) {
     this.logger.log(`[-] Retrieving user with id: ${id}`);
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 }

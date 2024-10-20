@@ -59,6 +59,8 @@ $ npm run test:cov
 ```
 
 ## Swagger
+No swagger tem as rotas e os dados que podem ser usados.
+Pode tambem testar as rotas direto no swagger.
 
 ```bash
 $ npm run start:dev

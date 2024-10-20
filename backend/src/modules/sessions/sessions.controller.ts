@@ -25,26 +25,25 @@ export class SessionsController {
   constructor(
     private readonly userService: UserService,
     private readonly sessionService: SessionsService,
-    private readonly openaiService: OpenaiService,
-    private readonly tabsService: TabsService,
   ) {}
 
   @Post('')
   @ApiOperation({ summary: 'Create a new session' })
   @ApiResponse({ status: 201, description: 'The session has been successfully created.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  create(@Body() createSessionDto: CreateSessionDto) {
+  async create(@Body() createSessionDto: CreateSessionDto) {
     this.logger.log(
       `[-] Creating new session: ${JSON.stringify(createSessionDto)}`,
     );
-    const user = this.userService.create({
+    const user = await this.userService.create({
       name: createSessionDto.userName,
     });
     const sessionCode = this.sessionService.generateUniqueCode();
     return this.sessionService.create({
-      ...createSessionDto,
-      creatorId: user.id,
+      name: createSessionDto.name,
+      creatorId: user._id.toString(),
       code: sessionCode,
+      tab: createSessionDto.tab,
     });
   }
 
@@ -65,18 +64,18 @@ export class SessionsController {
   @ApiOperation({ summary: 'Retrieve a session by id' })
   @ApiResponse({ status: 200, description: 'The session has been successfully retrieved.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     this.logger.log(`[-] Retrieving session with id: ${id}`);
-    return this.sessionService.findOne(+id);
+    return this.sessionService.findOne(id);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a session by id' })
   @ApiResponse({ status: 200, description: 'The session has been successfully removed.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
     this.logger.log(`[-] Removing session with id: ${id}`);
-    return this.sessionService.remove(+id);
+    return this.sessionService.remove(id);
   }
 
   @Put(':id')
@@ -84,23 +83,23 @@ export class SessionsController {
   @ApiResponse({ status: 200, description: 'The session has been successfully updated.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   updateCode(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSessionDto: UpdateSessionDto,
   ) {
     this.logger.log(
       `[-] Updating session with id: ${id}: ${JSON.stringify(updateSessionDto)}`,
     );
-    return this.sessionService.update(+id, updateSessionDto);
+    return this.sessionService.update(id, updateSessionDto);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a session by id' })
   @ApiResponse({ status: 200, description: 'The session has been successfully updated.' })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  update(@Param('id') id: number, @Body() updateSessionDto: UpdateSessionDto) {
+  update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
     this.logger.log(
       `Patching session with id: ${id}: ${JSON.stringify(updateSessionDto)}`,
     );
-    return this.sessionService.patch(+id, updateSessionDto);
+    return this.sessionService.patch(id, updateSessionDto);
   }
 }
