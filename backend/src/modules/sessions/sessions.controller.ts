@@ -1,10 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Logger } from '@nestjs/common';
-import { CreateSessionDto } from './dto/create-session.dto';
-import { SessionsService } from './sessions.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { OpenaiService } from '../openai/openai.service';
 import { UserService } from '../users/user.service';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UpdateUserDto } from '../users/dto/update-user.dto';
+import { CreateSessionDto } from './dto/create-session.dto';
+import { ProcessTabDto } from './dto/process-tab.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
+import { SessionsService } from './sessions.service';
+import { TabsService } from '../tabs/tabs.service';
 
 @Controller('sessions')
 export class SessionsController {
@@ -13,17 +24,42 @@ export class SessionsController {
   constructor(
     private readonly userService: UserService,
     private readonly sessionService: SessionsService,
+    private readonly openaiService: OpenaiService,
+    private readonly tabsService: TabsService,
   ) {}
 
   @Post('')
   create(@Body() createSessionDto: CreateSessionDto) {
-    this.logger.log(`[-] Creating new session: ${JSON.stringify(createSessionDto)}`);
+    this.logger.log(
+      `[-] Creating new session: ${JSON.stringify(createSessionDto)}`,
+    );
     const user = this.userService.create({
       name: createSessionDto.userName,
     });
     const sessionCode = this.sessionService.generateUniqueCode();
-    return this.sessionService.create(user.id, sessionCode);
+    return this.sessionService.create({
+      ...createSessionDto,
+      creatorId: user.id,
+      code: sessionCode,
+    });
   }
+
+  @Post('/process-tab')
+  async processTab(@Body() processTabDto: ProcessTabDto) {
+    this.logger.log(`[-] Processing tab: ${JSON.stringify(processTabDto)}`);
+    try {
+      const imageUrl = await this.tabsService.uploadImage(processTabDto.image);
+      const tab = await this.openaiService.generateTab(imageUrl);
+      await this.sessionService.patch(processTabDto.sessionId, { tab });
+    } catch (error) {
+      this.logger.error(`[-] Error processing tab: ${error}`);
+      throw new Error(error);
+    }
+  }
+
+  ///////////////////////////////////////////////////
+  /////            CRUD OPERATIONS              /////
+  ///////////////////////////////////////////////////
 
   @Get('')
   findAll() {
@@ -44,14 +80,21 @@ export class SessionsController {
   }
 
   @Put(':id')
-  updateCode(@Param('id') id: number, @Body() updateSessionDto: UpdateSessionDto) {
-    this.logger.log(`[-] Updating session with id: ${id}: ${JSON.stringify(updateSessionDto)}`);
+  updateCode(
+    @Param('id') id: number,
+    @Body() updateSessionDto: UpdateSessionDto,
+  ) {
+    this.logger.log(
+      `[-] Updating session with id: ${id}: ${JSON.stringify(updateSessionDto)}`,
+    );
     return this.sessionService.update(+id, updateSessionDto);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateSessionDto: UpdateSessionDto) {
-    this.logger.log(`Patching session with id: ${id}: ${JSON.stringify(updateSessionDto)}`);
+    this.logger.log(
+      `Patching session with id: ${id}: ${JSON.stringify(updateSessionDto)}`,
+    );
     return this.sessionService.patch(+id, updateSessionDto);
   }
 }

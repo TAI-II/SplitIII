@@ -1,7 +1,10 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
-import { SessionsService } from './sessions.service';
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+} from '@nestjs/websockets';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { UpdateSessionDto } from './dto/update-session.dto';
+import { SessionsService } from './sessions.service';
 
 @WebSocketGateway()
 export class SessionsGateway {

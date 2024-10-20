@@ -1,33 +1,35 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateOpenaiDto } from './dto/create-openai.dto';
-import { UpdateOpenaiDto } from './dto/update-openai.dto';
+import { ITab } from '../tabs/interface/tab.interface';
 
 @Injectable()
 export class OpenaiService {
   private readonly logger = new Logger(OpenaiService.name);
 
-  create(createOpenaiDto: CreateOpenaiDto) {
-    this.logger.log('Creating new openai');
-    return 'This action adds a new openai';
-  }
-
-  findAll() {
-    this.logger.log('Retrieving all openai');
-    return `This action returns all openai`;
-  }
-
-  findOne(id: number) {
-    this.logger.log(`Finding openai with id: ${id}`);
-    return `This action returns a #${id} openai`;
-  }
-
-  update(id: number, updateOpenaiDto: UpdateOpenaiDto) {
-    this.logger.log(`Updating openai with id: ${id}`);
-    return `This action updates a #${id} openai`;
-  }
-
-  remove(id: number) {
-    this.logger.log(`Removing openai with id: ${id}`);
-    return `This action removes a #${id} openai`;
+  async generateTab(imageUrl: string): Promise<ITab> {
+    this.logger.log(`[-] Generating tab from image: ${imageUrl}`);
+    return {
+      total: 100,
+      serviceFee: 10,
+      items: [
+        {
+          id: '1',
+          name: 'Cerveja',
+          totalAmount: 3,
+          pricePerUnit: 7.0,
+        },
+        {
+          id: '2',
+          name: 'Refrigerante',
+          totalAmount: 5,
+          pricePerUnit: 5.0,
+        },
+        {
+          id: '3',
+          name: 'Porção de Batata Frita',
+          totalAmount: 1,
+          pricePerUnit: 18.0,
+        },
+      ],
+    };
   }
 }

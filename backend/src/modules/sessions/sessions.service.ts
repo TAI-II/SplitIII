@@ -1,32 +1,37 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
-import { Session } from './entities/session.entity';
+import { ISession } from './interfaces/ISession';
 
 @Injectable()
 export class SessionsService {
   private readonly logger = new Logger(SessionsService.name);
-  sessions: Session[] = [];
+  sessions: ISession[] = [];
 
-  create(userId: number, code: string) {
-    this.logger.log(`Creating new session for user ${userId} with code ${code}`);
+  create(data: Partial<ISession>) {
+    this.logger.log(`Creating new session`);
     const newSession = {
       id: this.sessions.length + 1,
-      userId,
-      code,
+      creatorId: data.creatorId,
+      name: data.name,
+      code: data.code,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.sessions.push(newSession);
     this.logger.debug(`Session created: ${JSON.stringify(newSession)}`);
     return newSession;
   }
 
+  ///////////////////////////////////////////////////
+  /////            CRUD OPERATIONS              /////
+  ///////////////////////////////////////////////////
+
   findAll() {
     this.logger.log('Retrieving all sessions');
     return this.sessions;
   }
 
-  findOne(id: number): Session | undefined {
+  findOne(id: number): ISession | undefined {
     this.logger.log(`Finding session with id: ${id}`);
     const session = this.sessions.find((session) => session.id === id);
     if (!session) {
@@ -39,7 +44,7 @@ export class SessionsService {
 
   remove(id: number) {
     this.logger.log(`Removing session with id: ${id}`);
-    try{
+    try {
       this.sessions = this.sessions.filter((session) => session.id !== id);
     } catch (error) {
       this.logger.error(`Error removing session with id: ${id}`, error);
@@ -79,5 +84,5 @@ export class SessionsService {
     const code = Math.random().toString(36).substring(2, 15);
     this.logger.debug(`Unique code generated: ${code}`);
     return code;
-  } 
+  }
 }

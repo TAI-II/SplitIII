@@ -23,7 +23,7 @@ export class UserService {
     return this.users.find((user) => user.id === id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number) {
     return this.users.find((user) => user.id === id);
   }
 
