@@ -2,13 +2,13 @@
 import { ref } from 'vue'
 const emit = defineEmits(['setPage'])
 
-const sessionCode = ref<string>('')
+const session = ref<string>('')
 const name = ref<string>('')
 
 const errorMsg = ref<string>('')
 const createSession = () => {
-  if (sessionCode.value.length < 4)
-    return (errorMsg.value = 'Digite o código de 4 dígitos da sessão!')
+  if (session.value.length < 3)
+    return (errorMsg.value = 'Digite o nome da sessão!')
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
 }
@@ -26,12 +26,11 @@ const createSession = () => {
       <div class="flex flex-col w-full gap-3 mt-2">
         <div class="relative w-full">
           <i
-            class="mdi mdi-lock-outline absolute left-4 top-1/2 transform -translate-y-1/2 text-black text-2xl"
+            class="mdi mdi-star-outline absolute left-4 top-1/2 transform -translate-y-1/2 text-black text-2xl"
           ></i>
           <input
-            v-model="sessionCode"
-            maxlength="4"
-            placeholder="Código da sessão"
+            v-model="session"
+            placeholder="Nome da sessão"
             class="pl-14 py-3 border w-full border-black rounded-2xl focus:outline-none"
           />
         </div>
