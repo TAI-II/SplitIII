@@ -55,7 +55,7 @@ const createSession = () => {
       </button>
     </div>
     <button
-      @click="emit('setPage', 'select')"
+      @click="emit('setPage', 'select', true)"
       class="w-12 h-12 border-[3px] flex items-center hover:bg-primary justify-center bg-white border-black rounded-full shrink-0"
     >
       <i class="mdi mdi-keyboard-return text-2xl"></i>

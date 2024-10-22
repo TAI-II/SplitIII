@@ -6,6 +6,7 @@ export type AnimationType =
   | 'slide-in-bottom-out-none'
   | 'slide-in-bottom'
   | 'slide-in-left'
+  | 'slide-in-left-out-right'
   | 'slide-in-right'
   | 'slide-in-right-out-left'
   | 'slide-in-top'
@@ -52,6 +53,14 @@ withDefaults(defineProps<Props>(), {
 .slide-in-right-leave-active {
   animation: slide-in-right 0.5s reverse;
 }
+
+.slide-in-right-out-left-enter-active {
+  animation: slide-in-right 0.5s;
+}
+.slide-in-right-out-left-leave-active {
+  animation: slide-in-left 0.5s reverse;
+}
+
 @keyframes slide-in-right {
   0% {
     transform: translateX(100%);
@@ -61,18 +70,18 @@ withDefaults(defineProps<Props>(), {
   }
 }
 
-.slide-in-right-out-left-enter-active {
-  animation: slide-in-right 0.5s;
-}
-.slide-in-right-out-left-leave-active {
-  animation: slide-in-left 0.5s reverse;
-}
-
 .slide-in-left-enter-active {
   animation: slide-in-left 0.5s;
 }
 .slide-in-left-leave-active {
   animation: slide-in-left 0.5s reverse;
+}
+
+.slide-in-left-out-right-enter-active {
+  animation: slide-in-left 0.5s;
+}
+.slide-in-left-out-right-leave-active {
+  animation: slide-in-right 0.5s reverse;
 }
 @keyframes slide-in-left {
   0% {

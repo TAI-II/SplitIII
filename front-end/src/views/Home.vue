@@ -13,15 +13,24 @@ const pages: Record<Pages, any> = {
 }
 const currentPage = ref<Pages>('select')
 
-const setPage = (newPage: Pages) => {
+const transition = ref<'slide-in-right-out-left' | 'slide-in-left-out-right'>(
+  'slide-in-right-out-left'
+)
+const setPage = (newPage: Pages, isReturn?: boolean) => {
+  transition.value = 'slide-in-right-out-left'
+  let delay = 300
+  if (isReturn) {
+    transition.value = 'slide-in-left-out-right'
+    delay = 0
+  }
   setTimeout(() => {
     currentPage.value = newPage
-  }, 300)
+  }, delay)
 }
 </script>
 <template>
   <div class="h-screen w-full flex flex-col px-6 items-center justify-center">
-    <TransitionWrapper name="slide-in-right-out-left">
+    <TransitionWrapper :name="transition">
       <component :is="pages[currentPage]" @setPage="setPage"></component>
     </TransitionWrapper>
   </div>
