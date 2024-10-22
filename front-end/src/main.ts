@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router' // Importa o roteador
 import './style.css'
+import '@mdi/font/css/materialdesignicons.min.css'
 
 const app = createApp(App)
 

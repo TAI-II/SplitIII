@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: 'Urbanist', sans-serif;
+  font-family: 'Inter', sans-serif;
   @apply bg-grey;
 
   font-synthesis: none;
@@ -15,4 +16,28 @@
 
 #app {
   @apply mx-auto max-w-[600px] text-center;
+}
+
+h1 {
+  @apply text-2xl font-black font-urbanist;
+}
+
+h3 {
+  @apply text-lg font-bold font-urbanist;
+}
+
+p {
+  @apply text-sm text-left;
+}
+
+input::placeholder {
+  @apply text-sm;
+}
+
+.font-urbanist {
+  font-family: 'Urbanist', sans-serif;
+}
+
+.button-style {
+  @apply border-[3px] border-black rounded-2xl mb-[3px]  hover:filter-none hover:translate-y-[3px] transition-all drop-shadow-cartoon;
 }

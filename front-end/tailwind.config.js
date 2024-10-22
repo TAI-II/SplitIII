@@ -8,6 +8,9 @@ module.exports = {
         secondary: '#84E488',
         grey: '#f1f1f1',
       },
+      dropShadow:{
+        'cartoon': '0px 5px 0px #000000'
+      }
     },
   },
   plugins: [],
