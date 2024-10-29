@@ -23,7 +23,11 @@ async function bootstrap() {
    * This is used to validate the body of the request
    * It will throw an error if the body is not valid
    */
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }));
 
   /**
    * Global Exception Filter
