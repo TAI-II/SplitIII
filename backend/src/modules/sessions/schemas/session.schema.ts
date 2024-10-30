@@ -21,6 +21,9 @@ export class Session {
     items: { id: 1; name: string; totalAmount: number; pricePerUnit: number }[];
   };
 
+  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
+  users: Types.ObjectId[];
+
   @Prop({ default: Date.now })
   createdAt: Date;
 

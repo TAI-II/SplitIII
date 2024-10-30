@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ITab } from 'src/modules/tabs/interface/tab.interface';
+import { Types } from 'mongoose';
 
 export class CreateSessionDto {
   @ApiProperty({ description: 'The name of the session' })
@@ -22,4 +23,9 @@ export class CreateSessionDto {
   @IsOptional()
   @IsObject()
   tab?: ITab;
+
+  @ApiProperty({ description: 'The users of the session' })
+  @IsOptional()
+  @IsArray()
+  users?: Types.ObjectId[];
 }
