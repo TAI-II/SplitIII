@@ -2,6 +2,7 @@ import { IsArray, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-valid
 import { ApiProperty } from '@nestjs/swagger';
 import { ITab } from 'src/modules/tabs/interface/tab.interface';
 import { Types } from 'mongoose';
+import { SelectedItem } from '../interfaces/ISession';
 
 export class CreateSessionDto {
   @ApiProperty({ description: 'The name of the session' })
@@ -10,9 +11,14 @@ export class CreateSessionDto {
   name: string;
 
   @ApiProperty({ description: 'The name of the user creating the session' })
+  @IsOptional()
+  @IsString()
+  userName?: string;
+
+  @ApiProperty({ description: 'The id of the user creating the session' })
   @IsNotEmpty()
   @IsString()
-  userName: string;
+  creatorId?: string;
 
   @ApiProperty({ description: 'The code of the session' })
   @IsOptional()
@@ -28,4 +34,14 @@ export class CreateSessionDto {
   @IsOptional()
   @IsArray()
   users?: Types.ObjectId[];
+
+  @ApiProperty({ description: 'The user selections of the session' })
+  @IsOptional()
+  @IsObject()
+  userSelections?: { [key: string]: SelectedItem[] };
+
+  @ApiProperty({ description: 'The ready users of the session' })
+  @IsOptional()
+  @IsArray()
+  readyUsers?: Types.ObjectId[];
 }
