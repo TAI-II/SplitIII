@@ -3,6 +3,8 @@ import { SessionsService } from './sessions.service';
 import { JoinSessionDto } from './dto/join-session.dto';
 import { Logger } from '@nestjs/common';
 import { UserService } from '../users/user.service';
+import { ReadySessionDto } from './dto/ready-session.dto';
+import { ISessionUser } from './interfaces/ISessionUser';
 
 @WebSocketGateway()
 export class SessionsGateway {
@@ -37,19 +39,28 @@ export class SessionsGateway {
         return { success: false, error: 'Session not found' };
       }
 
-      const users = session.users || [];
-      this.logger.log(`Current users in session ${sessionId}: ${JSON.stringify(users)}`);
+      const sessionUsers = session.sessionUsers || [];
+      const existingUser = sessionUsers.find(su => su.userId.toString() === userId.toString());
       
-      if (users.includes(userId)) {
+      if (existingUser) {
         this.logger.warn(`User ${userId} is already in session ${sessionId}`);
         return { success: false, error: 'User already in session' };
       }
-      
-      await this.sessionService.patch(sessionId, { users: [...users, userId] });
-      this.logger.log(`User ${userId} added to session ${sessionId}`);
-      
+
+      const newSessionUser: ISessionUser = {
+        userId,
+        name: user.name,
+        isReady: false,
+        selectedItems: [],
+        joinedAt: new Date()
+      };
+
+      await this.sessionService.patch(sessionId, {
+        sessionUsers: [...sessionUsers, newSessionUser]
+      });
+
       const updatedSession = await this.sessionService.findOne(sessionId);
-      return { success: true, data: updatedSession.users };
+      return { success: true, data: updatedSession.sessionUsers };
     } catch (error) {
       this.logger.error(`Error handling joinSession for user ${userId} in session ${sessionId}`, error.stack);
       return { success: false, error: 'Internal server error' };
@@ -80,23 +91,72 @@ export class SessionsGateway {
         return { success: false, error: 'Session not found' };
       }
 
-      const users = session.users || [];
-      this.logger.log(`Current users in session ${sessionId}: ${JSON.stringify(users)}`);
+      const sessionUsers = session.sessionUsers || [];
+      this.logger.log(`Current users in session ${sessionId}: ${JSON.stringify(sessionUsers)}`);
       
-      if (!users.includes(userId)) {
+      if (!sessionUsers.some(su => su.userId.toString() === userId.toString())) {
         this.logger.warn(`User ${userId} is not in session ${sessionId}`);
         return { success: false, error: 'User not in session' };
       }
       
       await this.sessionService.patch(sessionId, { 
-        users: users.filter(id => id !== userId) 
+        sessionUsers: sessionUsers.filter(su => su.userId.toString() !== userId.toString()) 
       });
       this.logger.log(`User ${userId} removed from session ${sessionId}`);
       
       const updatedSession = await this.sessionService.findOne(sessionId);
-      return { success: true, data: updatedSession.users };
+      return { success: true, data: updatedSession.sessionUsers };
     } catch (error) {
       this.logger.error(`Error handling leaveSession for user ${userId} in session ${sessionId}`, error.stack);
+      return { success: false, error: 'Internal server error' };
+    }
+  }
+
+  @SubscribeMessage('ready')
+  async handleReady(@MessageBody() readySessionDto: ReadySessionDto) {
+    const { sessionId, userId, selectedItems } = readySessionDto;
+    this.logger.log(`User ${userId} is marking as ready in session ${sessionId}`);
+
+    try {
+      if (!this.userService.isValidObjectId(userId)) {
+        this.logger.warn(`Invalid userId format: ${userId}`);
+        return { success: false, error: 'Invalid userId format' };
+      }
+
+      const session = await this.sessionService.findOne(sessionId);
+      if (!session) {
+        this.logger.warn(`Session with id ${sessionId} not found`);
+        return { success: false, error: 'Session not found' };
+      }
+
+      const sessionUsers = session.sessionUsers || [];
+      const userIndex = sessionUsers.findIndex(su => su.userId.toString() === userId.toString());
+
+      if (userIndex === -1) {
+        this.logger.warn(`User ${userId} is not in session ${sessionId}`);
+        return { success: false, error: 'User not in session' };
+      }
+
+      if (sessionUsers[userIndex].isReady) {
+        this.logger.warn(`User ${userId} is already ready in session ${sessionId}`);
+        return { success: false, error: 'User already ready' };
+      }
+
+      sessionUsers[userIndex] = {
+        ...sessionUsers[userIndex],
+        isReady: true,
+        selectedItems
+      };
+
+      await this.sessionService.patch(sessionId, { sessionUsers });
+
+      const updatedSession = await this.sessionService.findOne(sessionId);
+      return { 
+        success: true, 
+        data: updatedSession.sessionUsers 
+      };
+    } catch (error) {
+      this.logger.error(`Error handling ready state for user ${userId} in session ${sessionId}`, error.stack);
       return { success: false, error: 'Internal server error' };
     }
   }

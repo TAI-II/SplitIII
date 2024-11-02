@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ITab } from 'src/modules/tabs/interface/tab.interface';
 import { Types } from 'mongoose';
 import { SelectedItem } from '../interfaces/ISession';
+import { ISessionUser } from '../interfaces/ISessionUser';
 
 export class CreateSessionDto {
   @ApiProperty({ description: 'The name of the session' })
@@ -16,7 +17,7 @@ export class CreateSessionDto {
   userName?: string;
 
   @ApiProperty({ description: 'The id of the user creating the session' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   creatorId?: string;
 
@@ -33,7 +34,7 @@ export class CreateSessionDto {
   @ApiProperty({ description: 'The users of the session' })
   @IsOptional()
   @IsArray()
-  users?: Types.ObjectId[];
+  sessionUsers?: ISessionUser[];
 
   @ApiProperty({ description: 'The user selections of the session' })
   @IsOptional()

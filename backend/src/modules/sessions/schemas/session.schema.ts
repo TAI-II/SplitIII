@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { ISessionUser } from '../interfaces/ISessionUser';
 
 export type SessionDocument = HydratedDocument<Session>;
 
@@ -18,11 +19,11 @@ export class Session {
   tab: {
     total: number;
     serviceFee: number;
-    items: { id: 1; name: string; totalAmount: number; pricePerUnit: number }[];
+    items: { id: string; name: string; totalAmount: number; pricePerUnit: number }[];
   };
 
-  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
-  users: Types.ObjectId[];
+  @Prop({ type: [Object], default: [] })
+  sessionUsers: ISessionUser[];
 
   @Prop({ default: Date.now })
   createdAt: Date;
