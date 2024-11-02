@@ -5,7 +5,8 @@ export interface ISessionUser {
     name: string;
     isReady: boolean;
     selectedItems: {
-      itemId: string;
+      id: string;
+      name: string;
       quantity: number;
     }[];
     joinedAt: Date;

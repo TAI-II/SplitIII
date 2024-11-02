@@ -137,15 +137,14 @@ export class SessionsGateway {
         return { success: false, error: 'User not in session' };
       }
 
-      if (sessionUsers[userIndex].isReady) {
-        this.logger.warn(`User ${userId} is already ready in session ${sessionId}`);
-        return { success: false, error: 'User already ready' };
-      }
-
       sessionUsers[userIndex] = {
         ...sessionUsers[userIndex],
         isReady: true,
-        selectedItems
+        selectedItems: selectedItems.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity
+        }))
       };
 
       await this.sessionService.patch(sessionId, { sessionUsers });
@@ -157,6 +156,50 @@ export class SessionsGateway {
       };
     } catch (error) {
       this.logger.error(`Error handling ready state for user ${userId} in session ${sessionId}`, error.stack);
+      return { success: false, error: 'Internal server error' };
+    }
+  }
+
+  @SubscribeMessage('unready')
+  async handleUnready(@MessageBody() readySessionDto: ReadySessionDto) {
+    const { sessionId, userId } = readySessionDto;
+    this.logger.log(`User ${userId} is marking as unready in session ${sessionId}`);
+
+    try {
+      if (!this.userService.isValidObjectId(userId)) {
+        this.logger.warn(`Invalid userId format: ${userId}`);
+        return { success: false, error: 'Invalid userId format' };
+      }
+
+      const session = await this.sessionService.findOne(sessionId);
+      if (!session) {
+        this.logger.warn(`Session with id ${sessionId} not found`);
+        return { success: false, error: 'Session not found' };
+      }
+
+      const sessionUsers = session.sessionUsers || [];
+      const userIndex = sessionUsers.findIndex(su => su.userId.toString() === userId.toString());
+
+      if (userIndex === -1) {
+        this.logger.warn(`User ${userId} is not in session ${sessionId}`);
+        return { success: false, error: 'User not in session' };
+      }
+
+      sessionUsers[userIndex] = {
+        ...sessionUsers[userIndex],
+        isReady: false,
+        selectedItems: []
+      };
+
+      await this.sessionService.patch(sessionId, { sessionUsers });
+
+      const updatedSession = await this.sessionService.findOne(sessionId);
+      return { 
+        success: true, 
+        data: updatedSession.sessionUsers 
+      };
+    } catch (error) {
+      this.logger.error(`Error handling unready state for user ${userId} in session ${sessionId}`, error.stack);
       return { success: false, error: 'Internal server error' };
     }
   }

@@ -4,7 +4,11 @@ import { Types } from 'mongoose';
 class SelectedItem {
   @IsString()
   @IsNotEmpty()
-  itemId: string;
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
   @IsNumber()
   @IsNotEmpty()
