@@ -90,6 +90,10 @@ describe('Sessions Flow (e2e)', () => {
     CleanupUtility.trackUserId(responseUser.body._id);
   });
 
+  it('should create a session, add user to session, and remove user from session', async () => {
+
+  });
+
   afterAll(async () => {
     await app.close();
     await CleanupUtility.cleanup(sessionsService, userService);
