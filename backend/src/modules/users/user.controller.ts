@@ -2,6 +2,7 @@ import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Types } from 'mongoose';
 
 @Controller('users')
 @ApiTags('users')
@@ -41,7 +42,7 @@ export class UserController {
     description: 'The user has been successfully retrieved.',
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: Types.ObjectId) {
     this.logger.log(`[-] Retrieving user with id: ${id}`);
     return this.userService.findOne(id);
   }

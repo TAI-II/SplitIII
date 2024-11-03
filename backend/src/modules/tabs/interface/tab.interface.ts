@@ -1,12 +1,17 @@
-export interface ITab {
-  total: number;
-  serviceFee: number;
-  items: IItem[];
-}
-
-export interface IItem {
+export interface ITabItem {
   id: string;
   name: string;
-  totalAmount: number;
   pricePerUnit: number;
+  description?: string;
+  category?: string;
+}
+
+export interface ITab {
+  items: ITabItem[];
+  serviceFee: number;
+  restaurantName: string;
+  tableNumber?: string;
+  date: Date;
+  subtotal: number;
+  total: number;
 }

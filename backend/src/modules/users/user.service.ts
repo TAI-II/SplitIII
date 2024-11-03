@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
 
@@ -17,15 +17,26 @@ export class UserService {
     return this.userModel.find();
   }
 
-  findOne(id: string) {
+  findOne(id: Types.ObjectId) {
     return this.userModel.findById(id);
   }
 
-  update(id: string) {
+  update(id: Types.ObjectId) {
     return this.userModel.findByIdAndUpdate(id, { new: true });
   }
 
-  remove(id: string) {
+  remove(id: Types.ObjectId) {
     return this.userModel.findByIdAndDelete(id);
+  }
+
+  isValidObjectId(id: any): boolean {
+    try {
+      if (typeof id !== 'string') {
+        return false;
+      }
+      return id.match(/^[0-9a-fA-F]{24}$/) !== null;
+    } catch (e) {
+      return false;
+    }
   }
 }

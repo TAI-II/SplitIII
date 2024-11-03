@@ -5,6 +5,8 @@ import { SessionsModule } from './modules/sessions/sessions.module';
 import { UserModule } from './modules/users/user.module';
 import { TabsModule } from './modules/tabs/tabs.module';
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { BillsModule } from './modules/bills/bills.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { ConfigModule } from '@nestjs/config';
     SessionsModule,
     UserModule,
     TabsModule,
+    BillsModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

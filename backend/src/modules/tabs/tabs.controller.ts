@@ -6,7 +6,7 @@ import { OpenaiService } from '../openai/openai.service';
 import { NotFoundException } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ITab } from './interface/tab.interface';
+import { LinkTabToSessionDto } from './link-tab.dto';
 
 @Controller('tabs')
 @ApiTags('tabs')
@@ -51,5 +51,16 @@ export class TabsController {
       }
       throw new InternalServerErrorException('Error processing tab');
     }
+  }
+
+  @Post('/link-to-session')
+  @ApiBody({
+    type: LinkTabToSessionDto,
+  })
+  async linkTabToSession(@Body() linkTabToSessionDto: LinkTabToSessionDto) {
+    return this.tabsService.linkTab(
+      linkTabToSessionDto.sessionId,
+      linkTabToSessionDto.tab,
+    );
   }
 }

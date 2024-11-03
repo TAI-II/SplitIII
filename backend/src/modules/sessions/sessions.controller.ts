@@ -36,13 +36,17 @@ export class SessionsController {
     this.logger.log(
       `[-] Creating new session: ${JSON.stringify(createSessionDto)}`,
     );
-    const user = await this.userService.create({
-      name: createSessionDto.userName,
-    });
+    if (createSessionDto.userName) {
+      const user = await this.userService.create({
+        name: createSessionDto.userName,
+      });
+      createSessionDto.creatorId = user._id.toString();
+    }
+
     const sessionCode = this.sessionService.generateUniqueCode();
     return this.sessionService.create({
       name: createSessionDto.name,
-      creatorId: user._id.toString(),
+      creatorId: createSessionDto.creatorId,
       code: sessionCode,
       tab: createSessionDto.tab,
     });
