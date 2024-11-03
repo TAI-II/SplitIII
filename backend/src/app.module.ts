@@ -6,6 +6,7 @@ import { UserModule } from './modules/users/user.module';
 import { TabsModule } from './modules/tabs/tabs.module';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
+import { BillsModule } from './modules/bills/bills.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AppController } from './app.controller';
     SessionsModule,
     UserModule,
     TabsModule,
+    BillsModule,
   ],
   controllers: [AppController],
 })

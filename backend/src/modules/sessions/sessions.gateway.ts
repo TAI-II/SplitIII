@@ -6,6 +6,7 @@ import { UserService } from '../users/user.service';
 import { ReadySessionDto } from './dto/ready-session.dto';
 import { ISessionUser } from './interfaces/ISessionUser';
 import { Server, Socket } from 'socket.io';
+import { BillCalculatorService } from '../bills/bills.service';
 
 @WebSocketGateway()
 export class SessionsGateway implements OnGatewayDisconnect {
@@ -24,6 +25,7 @@ export class SessionsGateway implements OnGatewayDisconnect {
   constructor(
     private readonly sessionService: SessionsService,
     private readonly userService: UserService,
+    private readonly billCalculatorService: BillCalculatorService,
   ) {
     // Sync to database every minute
     setInterval(() => this.syncActiveSessions(), 60000);
@@ -261,12 +263,26 @@ export class SessionsGateway implements OnGatewayDisconnect {
   @SubscribeMessage('checkAllUsersReady')
   async handleCheckAllUsersReady(@MessageBody() joinSessionDto: JoinSessionDto) {
     const { sessionId } = joinSessionDto;
-    this.logger.log(`Checking if all users are ready in session ${sessionId}`);
-
+    
     try {
       const sessionData = await this.getOrLoadSession(sessionId);
-      const allUsersReady = sessionData.users.length > 0 && sessionData.users.every(user => user.isReady);
+      const allUsersReady = sessionData.users.length > 0 && 
+                           sessionData.users.every(user => user.isReady);
       
+      // If all users are ready, automatically calculate the bill
+      if (allUsersReady) {
+        const session = await this.sessionService.findOne(sessionId);
+        const billCalculation = this.billCalculatorService.calculateBill({
+          tab: session.tab,
+          sessionUsers: sessionData.users,
+        });
+
+        this.server.emit(`session:${sessionId}:billCalculated`, {
+          success: true,
+          data: billCalculation,
+        });
+      }
+
       return { 
         success: true, 
         data: {
@@ -282,6 +298,32 @@ export class SessionsGateway implements OnGatewayDisconnect {
     } catch (error) {
       this.logger.error(`Error checking ready state for session ${sessionId}`, error.stack);
       return { success: false, error: 'Internal server error' };
+    }
+  }
+
+  @SubscribeMessage('calculateBill')
+  async handleCalculateBill(@MessageBody() { sessionId }: { sessionId: string }) {
+    this.logger.log(`Calculating bill for session ${sessionId}`);
+
+    try {
+      const sessionData = await this.getOrLoadSession(sessionId);
+      const session = await this.sessionService.findOne(sessionId); // We need the full session with tab data
+
+      const billCalculation = this.billCalculatorService.calculateBill({
+        ...session,
+        sessionUsers: sessionData.users,
+      });
+
+      // Emit the bill calculation to all users in the session
+      this.server.emit(`session:${sessionId}:billCalculated`, {
+        success: true,
+        data: billCalculation,
+      });
+
+      return { success: true, data: billCalculation };
+    } catch (error) {
+      this.logger.error(`Error calculating bill for session ${sessionId}`, error.stack);
+      return { success: false, error: 'Failed to calculate bill' };
     }
   }
 }

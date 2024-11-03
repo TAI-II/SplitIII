@@ -7,6 +7,8 @@ import { Session, SessionSchema } from './schemas/session.schema';
 import { SessionsController } from './sessions.controller';
 import { SessionsGateway } from './sessions.gateway';
 import { SessionsService } from './sessions.service';
+import { BillsModule } from '../bills/bills.module';
+import { BillCalculatorService } from '../bills/bills.service';
 
 @Module({
   imports: [
@@ -14,9 +16,10 @@ import { SessionsService } from './sessions.service';
     UserModule,
     OpenaiModule,
     TabsModule,
+    BillsModule,
   ],
   controllers: [SessionsController],
-  providers: [SessionsGateway, SessionsService],
+  providers: [SessionsGateway, SessionsService, BillCalculatorService],
   exports: [SessionsService],
 })
 export class SessionsModule {}

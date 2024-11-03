@@ -6,7 +6,6 @@ import { OpenaiService } from '../openai/openai.service';
 import { NotFoundException } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ITab } from './interface/tab.interface';
 import { LinkTabToSessionDto } from './link-tab.dto';
 
 @Controller('tabs')

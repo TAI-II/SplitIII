@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ITab } from './interface/tab.interface';
 import { SessionsService } from '../sessions/sessions.service';
+import { ITab } from './interface/tab.interface';
 
 @Injectable()
 export class TabsService {

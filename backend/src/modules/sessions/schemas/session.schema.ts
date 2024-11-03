@@ -17,9 +17,17 @@ export class Session {
 
   @Prop({ type: Object })
   tab: {
-    total: number;
+    items: { 
+      id: string; 
+      name: string; 
+      pricePerUnit: number;
+    }[];
     serviceFee: number;
-    items: { id: string; name: string; totalAmount: number; pricePerUnit: number }[];
+    restaurantName: string;
+    tableNumber?: string;
+    date: Date;
+    subtotal: number;
+    total: number;
   };
 
   @Prop({ type: [Object], default: [] })

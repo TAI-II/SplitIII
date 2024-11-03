@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
-import { ITab } from "./interface/tab.interface";
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LinkTabToSessionDto {
   @IsString()
