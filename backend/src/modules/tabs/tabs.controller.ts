@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Patch, Post } from '@nestjs/common';
 import { TabsService } from './tabs.service';
 import { ProcessTabDto } from '../sessions/dto/process-tab.dto';
 import { SessionsService } from '../sessions/sessions.service';
@@ -6,6 +6,7 @@ import { OpenaiService } from '../openai/openai.service';
 import { NotFoundException } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LinkTabToSessionDto } from './link-tab.dto';
 
 @Controller('tabs')
 @ApiTags('tabs')
@@ -42,12 +43,7 @@ export class TabsController {
       this.logger.log(`[-] Generating tab: ${imageUrl}`);
       const tab = await this.openaiService.generateTab(imageUrl);
 
-      this.logger.log(`[-] Generated tab: ${JSON.stringify(tab)}`);
-      this.logger.log(`[-] Patching session: ${processTabDto.sessionId}`);
-      await this.sessionService.patch(processTabDto.sessionId, { tab });
-
-      this.logger.log(`[-] Returning session: ${processTabDto.sessionId}`);
-      return this.sessionService.findOne(processTabDto.sessionId);
+      this.tabsService.linkTab(processTabDto.sessionId, tab);
     } catch (error) {
       this.logger.error(`[-] Error processing tab: ${error}`);
       if (error instanceof NotFoundException) {
@@ -55,5 +51,16 @@ export class TabsController {
       }
       throw new InternalServerErrorException('Error processing tab');
     }
+  }
+
+  @Post('/link-to-session')
+  @ApiBody({
+    type: LinkTabToSessionDto,
+  })
+  async linkTabToSession(@Body() linkTabToSessionDto: LinkTabToSessionDto) {
+    return this.tabsService.linkTab(
+      linkTabToSessionDto.sessionId,
+      linkTabToSessionDto.tab,
+    );
   }
 }
