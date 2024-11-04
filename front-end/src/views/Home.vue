@@ -2,14 +2,22 @@
 import Select from '@/components/Select.vue'
 import CreateSession from '@/components/Session/Create.vue'
 import EnterSession from '@/components/Session/Enter.vue'
+import SelectBillCreationMethod from '@/components/Session/Bill/SelectBillCreationMethod.vue'
+import CreateBillManualInsertion from '@/components/Session/Bill/ManualInsertion/CreateBill.vue'
 import TransitionWrapper from '@/components/library/TransitionWrapper.vue'
 import { Record, ref } from 'vue'
 
-type Pages = 'select' | 'createSession' | 'enterSession'
+type Pages =
+  | 'select'
+  | 'createSession'
+  | 'enterSession'
+  | 'selectBillCreationMethod'
 const pages: Record<Pages, any> = {
   select: Select,
   createSession: CreateSession,
   enterSession: EnterSession,
+  selectBillCreationMethod: SelectBillCreationMethod,
+  createBillManualInsertion: CreateBillManualInsertion,
 }
 const currentPage = ref<Pages>('select')
 

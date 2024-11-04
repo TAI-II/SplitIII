@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
 const emit = defineEmits(['setPage'])
+const userStore = useUserStore()
 
 const sessionCode = ref<string>('')
 const name = ref<string>('')
@@ -11,6 +13,8 @@ const enterSession = () => {
     return (errorMsg.value = 'Digite o código de 4 dígitos da sessão!')
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
+  userStore.createUser(name.value)
+  userStore.joinSession(userStore.getUserId(), sessionCode.value)
 }
 </script>
 <template>

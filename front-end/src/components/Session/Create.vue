@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useSessionStore } from '@/stores/session'
 const emit = defineEmits(['setPage'])
+const sessionStore = useSessionStore()
 
 const session = ref<string>('')
 const name = ref<string>('')
 
 const errorMsg = ref<string>('')
 const createSession = () => {
+  //TODO não esquecer de cuidar dos erros depois que a conexão for implementada
   if (session.value.length < 3)
     return (errorMsg.value = 'Digite o nome da sessão!')
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
+  sessionStore.createSession(name.value, session.value)
+  emit('setPage', 'selectBillCreationMethod')
 }
 </script>
 <template>
