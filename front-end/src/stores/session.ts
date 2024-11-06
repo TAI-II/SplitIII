@@ -1,37 +1,42 @@
 import { defineStore } from 'pinia'
-import { useUserStore } from './user'
 import { ref } from 'vue'
+import apiClient from '@/composables/useApi'
 
 export interface Session {
   id: string
+  creatorId: string
+  createdAt: string
+  code: string
+  name: string
 }
 
 export const useSessionStore = defineStore('SessionStore', () => {
-  const userStore = useUserStore()
-  const session = ref<Session>({
-    id: '',
-  })
+  const session = ref<Session | null>(null)
+  const error = ref<string | null>(null)
 
-  const getSessionId = (): string => {
-    return session.value.id
-  }
-
-  const setSessionId = (id: string) => {
-    session.value.id = id
-  }
-
-  const createSession = (name: string, userName: string) => {
+  const createSession = async (name: string, userName: string) => {
     const body = {
       name: name,
       userName: userName,
     }
-    const response = '1234' //TODO inserir chamada da api aqui
-    setSessionId(response)
-    userStore.createAdmin(name, getSessionId())
+    try {
+      const response = await apiClient.post('/sessions', body)
+      console.log('/sessions', response)
+      session.value = {
+        id: response.data.data._id,
+        creatorId: response.data.data.creatorId,
+        createdAt: response.data.data.createdAt,
+        code: response.data.data.code,
+        name: response.data.data.name,
+      }
+    } catch (err: any) {
+      error.value = err.message
+    }
   }
 
   return {
-    getSessionId,
+    session,
+    error,
     createSession,
   }
 })

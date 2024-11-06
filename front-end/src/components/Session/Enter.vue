@@ -14,7 +14,7 @@ const enterSession = () => {
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
   userStore.createUser(name.value)
-  userStore.joinSession(userStore.getUserId(), sessionCode.value)
+  userStore.joinSession(userStore.user.id, sessionCode.value)
 }
 </script>
 <template>

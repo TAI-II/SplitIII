@@ -23,11 +23,13 @@ async function bootstrap() {
    * This is used to validate the body of the request
    * It will throw an error if the body is not valid
    */
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   /**
    * Global Exception Filter
@@ -55,6 +57,9 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  // Habilita CORS e especifica a origem permitida
+  app.enableCors();
 
   await app.listen(port);
   Logger.log(

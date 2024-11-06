@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSessionStore } from '@/stores/session'
+import { useUserStore } from '@/stores/user'
 const emit = defineEmits(['setPage'])
 const sessionStore = useSessionStore()
+const userStore = useUserStore()
 
 const session = ref<string>('')
 const name = ref<string>('')
@@ -15,7 +17,8 @@ const createSession = () => {
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
   sessionStore.createSession(name.value, session.value)
-  emit('setPage', 'selectBillCreationMethod')
+  userStore.createAdmin(name.value, sessionStore.session.creatorId)
+  if (!sessionStore.error) emit('setPage', 'selectBillCreationMethod')
 }
 </script>
 <template>
