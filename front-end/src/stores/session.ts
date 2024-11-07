@@ -23,11 +23,11 @@ export const useSessionStore = defineStore('SessionStore', () => {
       const response = await apiClient.post('/sessions', body)
       console.log('/sessions', response)
       session.value = {
-        id: response.data.data._id,
-        creatorId: response.data.data.creatorId,
-        createdAt: response.data.data.createdAt,
-        code: response.data.data.code,
-        name: response.data.data.name,
+        id: response.data._id,
+        creatorId: response.data.creatorId,
+        createdAt: response.data.createdAt,
+        code: response.data.code,
+        name: response.data.name,
       }
     } catch (err: any) {
       error.value = err.message

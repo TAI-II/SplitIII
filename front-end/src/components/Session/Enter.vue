@@ -18,7 +18,7 @@ const enterSession = () => {
 }
 </script>
 <template>
-  <div class="w-full flex flex-col gap-8 items-end justify-center">
+  <div class="w-full flex h-screen flex-col gap-8 items-end justify-center">
     <div
       class="w-full flex flex-col gap-4 items-start justify-center bg-white px-6 py-8 rounded-2xl"
     >

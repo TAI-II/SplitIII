@@ -2,7 +2,7 @@
 const emit = defineEmits(['setPage'])
 </script>
 <template>
-  <div class="w-full flex flex-col gap-8 items-center justify-center">
+  <div class="w-full flex flex-col h-screen gap-8 items-center justify-center">
     <h3>Como deseja digitalizar sua comanda?</h3>
     <button
       disabled

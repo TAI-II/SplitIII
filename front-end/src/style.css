@@ -39,5 +39,9 @@ input::placeholder {
 }
 
 .button-style {
-  @apply border-[3px] border-black rounded-2xl mb-[3px] hover:filter-none hover:translate-y-[3px] transition-all drop-shadow-cartoon;
+  @apply border-[3px] border-black rounded-2xl mb-[3px] focus:filter-none focus:translate-y-[3px]  ease-in-out transition-all drop-shadow-cartoon;
+}
+
+.cartoon-border {
+  @apply border-[3px] border-black;
 }

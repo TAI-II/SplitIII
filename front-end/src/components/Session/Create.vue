@@ -10,19 +10,21 @@ const session = ref<string>('')
 const name = ref<string>('')
 
 const errorMsg = ref<string>('')
-const createSession = () => {
-  //TODO não esquecer de cuidar dos erros depois que a conexão for implementada
+
+const createSession = async () => {
   if (session.value.length < 3)
     return (errorMsg.value = 'Digite o nome da sessão!')
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
-  sessionStore.createSession(name.value, session.value)
+
+  await sessionStore.createSession(name.value, session.value)
   userStore.createAdmin(name.value, sessionStore.session.creatorId)
-  if (!sessionStore.error) emit('setPage', 'selectBillCreationMethod')
+  if (sessionStore.error) errorMsg.value = sessionStore.error
+  else emit('setPage', 'selectBillCreationMethod')
 }
 </script>
 <template>
-  <div class="w-full flex flex-col gap-8 items-end justify-center">
+  <div class="w-full h-screen flex flex-col gap-8 items-end justify-center">
     <div
       class="w-full flex flex-col gap-4 items-start justify-center bg-white px-6 py-8 rounded-2xl"
     >

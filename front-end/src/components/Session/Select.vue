@@ -2,7 +2,7 @@
 const emit = defineEmits(['setPage'])
 </script>
 <template>
-  <div class="w-full flex flex-col gap-8 items-center justify-center">
+  <div class="w-full h-screen flex flex-col gap-8 items-center justify-center">
     <h3>Selecione a opção desejada :</h3>
     <button
       @click="emit('setPage', 'createSession')"

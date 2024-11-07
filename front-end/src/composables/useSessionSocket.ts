@@ -1,7 +1,7 @@
 import { ref, onUnmounted } from 'vue'
 import { io, Socket } from 'socket.io-client'
 
-const socket: Socket = io('http://localhost:3000') // Conecta ao servidor WebSocket
+const socket: Socket = io(import.meta.env.VITE_SOCKET_URL) // Conecta ao servidor WebSocket
 
 export function useSessionSocket(sessionId: string) {
   const sessions = ref<any[]>([])
@@ -10,7 +10,14 @@ export function useSessionSocket(sessionId: string) {
 
   // Emite `joinSession`
   const joinSession = (userId: string) => {
-    socket.emit('joinSession', { sessionId, userId })
+    socket.emit('joinSession', { sessionId, userId }, (response: any) => {
+      console.log('Join session response:', response)
+      if (response.success) {
+        console.log('Successfully joined session:', response.data)
+      } else {
+        console.log('Failed to join session:', response.error)
+      }
+    })
   }
 
   // Emite `ready`

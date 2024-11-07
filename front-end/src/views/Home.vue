@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Select from '@/components/Select.vue'
+import Select from '@/components/Session/Select.vue'
 import CreateSession from '@/components/Session/Create.vue'
 import EnterSession from '@/components/Session/Enter.vue'
 import SelectBillCreationMethod from '@/components/Session/Bill/SelectBillCreationMethod.vue'
@@ -12,6 +12,7 @@ type Pages =
   | 'createSession'
   | 'enterSession'
   | 'selectBillCreationMethod'
+  | 'createBillManualInsertion'
 const pages: Record<Pages, any> = {
   select: Select,
   createSession: CreateSession,
@@ -37,7 +38,7 @@ const setPage = (newPage: Pages, isReturn?: boolean) => {
 }
 </script>
 <template>
-  <div class="h-screen w-full flex flex-col px-6 items-center justify-center">
+  <div class="w-full flex flex-col px-6 items-center justify-center">
     <TransitionWrapper :name="transition">
       <component :is="pages[currentPage]" @setPage="setPage"></component>
     </TransitionWrapper>

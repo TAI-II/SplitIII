@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { useBillStore } from '@/stores/bill'
-import { useSessionStore } from '@/stores/session'
-import { computed, watch, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { computed, watch, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import ToggleButton from '@/components/library/ToggleButton.vue'
+import { useSessionSocket } from '@/composables/useSessionSocket'
 
 const emit = defineEmits(['setPage'])
 const billStore = useBillStore()
-const sessionStore = useSessionStore()
+const userStore = useUserStore()
+const route = useRoute()
+const sessionSocket = useSessionSocket(route.params.id)
+
+onMounted(() => {
+  if (userStore.user) {
+    console.log('user: ', userStore.user)
+    sessionSocket.joinSession(userStore.user.id)
+  }
+})
 
 const lastItem = computed(() => {
   return !billStore.bill.items || billStore.bill.items.length < 2
@@ -45,13 +55,6 @@ function formatedPrice(price: number): string {
   return formatDisplayPrice(price)
 }
 
-function allowOnlyNumbers(event: KeyboardEvent) {
-  const key = event.key
-  if (!/^\d$/.test(key)) {
-    event.preventDefault()
-  }
-}
-
 //handle tip
 const hasTip = ref<boolean>(false)
 function onTipInput(event: Event) {
@@ -83,10 +86,8 @@ watch(
 )
 
 //handle link tab
-const router = useRouter()
 const linkBill = () => {
   billStore.linkBill()
-  router.push(`/sessao/${sessionStore.session.id}`)
 }
 </script>
 <template>
@@ -160,7 +161,6 @@ const linkBill = () => {
               type="text"
               :value="formatedPrice(billStore.bill.items[i].price)"
               @input="onPriceInput($event.target.value, i)"
-              @keypress="allowOnlyNumbers($event)"
               :class="item.price == 0 ? 'bg-grey' : ''"
               class="w-20 h-full hover:bg-grey text-center transition-all hover:outline-0 border border-grey rounded-md text-xs"
             />
@@ -176,49 +176,6 @@ const linkBill = () => {
         </button>
       </div>
       <div class="w-full p-6 pb-0 flex flex-col gap-8">
-        <div class="w-full flex flex-col gap-2 items-start">
-          <span class="w-full text-left font-urbanist font-black"
-            >Incluir adicionais?</span
-          >
-          <div class="flex flex-row w-full justify-between items-center">
-            <p>Gorjeta (%)</p>
-            <div class="flex flex-row items-center gap-2">
-              <div
-                :class="hasTip ? 'max-w-[50px]' : 'max-w-0'"
-                class="transition-all relative overflow-hidden"
-              >
-                <input
-                  id="percentageInput"
-                  type="number"
-                  v-model="billStore.bill.aditionalCosts.tip"
-                  @input="onTipInput"
-                  class="h-7 text- w-10 flex pl-2 transition-all over bg-grey hover:outline-0 rounded-md text-xs"
-                />
-                <span
-                  class="absolute right-1 top-1/2 mt-[1px] transform -translate-y-1/2 text-xs"
-                  >%</span
-                >
-              </div>
-              <ToggleButton v-model="hasTip" />
-            </div>
-          </div>
-          <!-- <div class="flex flex-row w-full justify-between items-center">
-            <p>Couvert (R$)</p>
-            <div class="flex flex-row items-center gap-2">
-              <input
-                id="priceInput"
-                type="text"
-                :value="formatedPrice(billStore.bill.aditionalCosts.couvert)"
-                @input="onCouvertInput($event.target.value)"
-                :class="hasCouvert ? 'max-w-[60px]' : 'max-w-0 opacity-0'"
-                class="h-7 bg-grey text-center transition-all hover:outline-0 rounded-md text-xs"
-              />
-
-              <ToggleButton v-model="hasCouvert" />
-            </div>
-          </div> -->
-        </div>
-
         <div class="w-full flex flex-col gap-4 items-center">
           <div class="flex flex-row items-center gap-4 justify-between">
             <span
@@ -245,6 +202,7 @@ const linkBill = () => {
           >
             <h1 class="text-lg">Dividir conta!</h1>
           </button>
+          <p>a{{ useSessionSocket.usersJoined }}</p>
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@ export const useUserStore = defineStore('UserStore', () => {
     try {
       const response = await apiClient.post('/users', body)
       user.value = {
-        id: response.data._id,
+        id: response.data.id,
         name: response.data.name,
         admin: false,
       }
@@ -48,6 +48,7 @@ export const useUserStore = defineStore('UserStore', () => {
   }
 
   return {
+    user,
     createUser,
     createAdmin,
     error,
