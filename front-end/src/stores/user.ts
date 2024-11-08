@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import apiClient from '@/composables/useApi'
+import type { Item } from '@/composables/bill'
 
 export interface User {
   id: string
   name: string
   admin: boolean
+  items: Item[] | null
 }
 
 export const useUserStore = defineStore('UserStore', () => {
@@ -22,6 +24,7 @@ export const useUserStore = defineStore('UserStore', () => {
         id: response.data.id,
         name: response.data.name,
         admin: false,
+        items: null,
       }
       console.log('/users', response)
     } catch (err: any) {
@@ -34,17 +37,22 @@ export const useUserStore = defineStore('UserStore', () => {
       id: id,
       name: name,
       admin: true,
+      items: null,
     }
   }
 
-  const joinSession = async (userId: string, sessionId: string) => {
-    // TODO não esquecer de cuidar dos erros quando implementar a conexão
-    const body = {
-      sessionId: sessionId,
-      userId: userId,
-    }
+  const setUserBill = (bill: Item[], empty?: boolean) => {
+    const billCopy = bill.map(item => ({ ...item }))
+    if (empty) billCopy.forEach(item => (item.quantity = 0))
+    if (user.value) user.value.items = billCopy
+  }
 
-    //TODO inserir chamada do evento aqui
+  function calculateTotal(): number {
+    if (!user.value || user.value.items == null) return 0
+    const subtotal = user.value.items.reduce((total, item) => {
+      return total + item.price * item.quantity
+    }, 0)
+    return subtotal
   }
 
   return {
@@ -52,5 +60,7 @@ export const useUserStore = defineStore('UserStore', () => {
     createUser,
     createAdmin,
     error,
+    setUserBill,
+    calculateTotal,
   }
 })

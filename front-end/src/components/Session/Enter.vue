@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { useSessionStore } from '@/stores/session'
 const emit = defineEmits(['setPage'])
 const userStore = useUserStore()
+const sessionStore = useSessionStore()
 
 const sessionCode = ref<string>('')
 const name = ref<string>('')
 
 const errorMsg = ref<string>('')
 const enterSession = () => {
-  if (sessionCode.value.length < 4)
+  if (sessionCode.value.length < 10)
     return (errorMsg.value = 'Digite o código de 4 dígitos da sessão!')
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
   userStore.createUser(name.value)
-  userStore.joinSession(userStore.user.id, sessionCode.value)
+  sessionStore.fetchSession(sessionCode.value)
+  // userStore.joinSession(userStore.user.id, sessionCode.value)
 }
 </script>
 <template>
@@ -32,7 +35,7 @@ const enterSession = () => {
           ></i>
           <input
             v-model="sessionCode"
-            maxlength="4"
+            maxlength="10"
             placeholder="Código da sessão"
             class="pl-14 py-3 border w-full border-black rounded-2xl focus:outline-none"
           />

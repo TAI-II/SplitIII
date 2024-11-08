@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import apiClient from '@/composables/useApi'
-
+import { useBillStore } from '@/stores/bill'
+import { useUserStore } from '@/stores/user'
 export interface Session {
   id: string
   creatorId: string
@@ -13,6 +14,8 @@ export interface Session {
 export const useSessionStore = defineStore('SessionStore', () => {
   const session = ref<Session | null>(null)
   const error = ref<string | null>(null)
+  const billStore = useBillStore()
+  const userStore = useUserStore()
 
   const createSession = async (name: string, userName: string) => {
     const body = {
@@ -34,9 +37,24 @@ export const useSessionStore = defineStore('SessionStore', () => {
     }
   }
 
+  const fetchSession = async (id: string) => {
+    const response = await apiClient.get(`/sessions/${id}`)
+    session.value = {
+      id: response.data._id,
+      creatorId: response.data.creatorId,
+      createdAt: response.data.createdAt,
+      code: response.data.code,
+      name: response.data.name,
+    }
+    console.log('fetched session: ', response.data)
+    billStore.setBill(response.data.tab)
+    userStore.setUserBill(response.data.tab.items, true)
+  }
+
   return {
     session,
     error,
     createSession,
+    fetchSession,
   }
 })

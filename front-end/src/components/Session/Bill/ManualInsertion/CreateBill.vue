@@ -14,10 +14,8 @@ const lastItem = computed(() => {
 })
 
 const allItemsValid = computed(() => {
-  return (
-    billStore.bill.items.every(
-      (item: any) => item.name !== '' && item.price > 0
-    ) && billStore.calculateTotal() > 0
+  return billStore.bill.items.every(
+    (item: any) => item.name !== '' && item.price > 0 && item.quantity > 0
   )
 })
 
@@ -84,17 +82,19 @@ watch(
 
 //handle link tab
 const router = useRouter()
-const linkBill = () => {
-  billStore.linkBill()
+const linkBill = async () => {
+  await billStore.linkBill()
   router.push(`/sessao/${sessionStore.session.id}`)
 }
 </script>
 <template>
   <div
-    class="w-full flex flex-col gap-8 items-center justify-start pt-24 pb-48"
+    class="w-full flex flex-col gap-8 items-center justify-start pt-32 pb-48"
   >
-    <div class="py-6 w-full flex flex-col gap-4 bg-white text-left rounded-xl">
-      <div class="w-full text-left px-6">
+    <div
+      class="py-4 w-full flex flex-col gap-4 bg-white cartoon-border text-left rounded-xl"
+    >
+      <div class="w-full text-left px-4">
         <h1>Comanda</h1>
       </div>
       <div class="w-full flex flex-col pl-3 gap-3 px-4">
@@ -125,7 +125,7 @@ const linkBill = () => {
               class="mdi mdi-close text-xl text-red-500 font-black"
             ></i>
             <input
-              :class="item.name == '' ? 'bg-grey' : ''"
+              :class="item.name == '' ? '' : 'bg-grey'"
               v-model="billStore.bill.items[i].name"
               class="w-full truncate text-left pl-1 focus:bg-grey transition-all hover:outline-0 border border-grey h-full rounded-md text-xs"
             />
@@ -146,6 +146,9 @@ const linkBill = () => {
                 type="number"
                 disabled
                 v-model="billStore.bill.items[i].quantity"
+                :class="
+                  billStore.bill.items[i].quantity == 0 ? 'text-red-600' : ''
+                "
                 class="px-2 text-center focus:outline-0 bg-secondary w-full h-6 rounded-full text-xs"
               />
               <button
@@ -161,7 +164,7 @@ const linkBill = () => {
               :value="formatedPrice(billStore.bill.items[i].price)"
               @input="onPriceInput($event.target.value, i)"
               @keypress="allowOnlyNumbers($event)"
-              :class="item.price == 0 ? 'bg-grey' : ''"
+              :class="item.price == 0 ? '' : 'bg-grey'"
               class="w-20 h-full hover:bg-grey text-center transition-all hover:outline-0 border border-grey rounded-md text-xs"
             />
           </div>
@@ -175,7 +178,7 @@ const linkBill = () => {
           <i class="mdi mdi-plus text-3xl"></i>
         </button>
       </div>
-      <div class="w-full p-6 pb-0 flex flex-col gap-8">
+      <div class="w-full p-4 pb-0 flex flex-col gap-8">
         <div class="w-full flex flex-col gap-2 items-start">
           <span class="w-full text-left font-urbanist font-black"
             >Incluir adicionais?</span
@@ -218,35 +221,32 @@ const linkBill = () => {
             </div>
           </div> -->
         </div>
-
-        <div class="w-full flex flex-col gap-4 items-center">
-          <div class="flex flex-row items-center gap-4 justify-between">
-            <span
-              class="text-xl font-black shrink-0 font-urbanist transition-all"
-            >
-              Total: {{ formatCurrency(billStore.calculateTotal()) }}
-            </span>
-            <p
-              :class="allItemsValid ? 'opacity-0' : ''"
-              class="text-[0.7rem] text-red-500 transition-all leading-3"
-            >
-              Preencha todos campos dos produtos para dividir
-            </p>
-          </div>
-          <button
-            @click="linkBill()"
-            :disabled="!allItemsValid"
-            :class="
-              !allItemsValid
-                ? 'text-zinc-500 bg-zinc-300 border-zinc-500 !filter-none translate-y-[3px]'
-                : 'bg-secondary focus:bg-primary'
-            "
-            class="w-full py-2 flex flex-col items-center !ease-in-out !duration-700 justify-center button-style"
-          >
-            <h1 class="text-lg">Dividir conta!</h1>
-          </button>
-        </div>
       </div>
+    </div>
+    <div class="w-full flex flex-col gap-4 items-center">
+      <div class="flex flex-row items-center gap-4 justify-between">
+        <span class="text-2xl font-black shrink-0 font-urbanist transition-all">
+          Total: {{ formatCurrency(billStore.calculateTotal()) }}
+        </span>
+        <p
+          :class="allItemsValid ? 'opacity-0' : ''"
+          class="text-[0.7rem] text-red-500 transition-all leading-3"
+        >
+          Preencha todos campos dos produtos para dividir
+        </p>
+      </div>
+      <button
+        @click="linkBill()"
+        :disabled="!allItemsValid"
+        :class="
+          !allItemsValid
+            ? 'text-zinc-500 bg-zinc-300 border-zinc-500 !filter-none translate-y-[3px]'
+            : 'bg-secondary focus:bg-primary'
+        "
+        class="w-full py-2 flex flex-col items-center !ease-in-out !duration-700 justify-center button-style"
+      >
+        <h1 class="text-lg">Dividir conta!</h1>
+      </button>
     </div>
   </div>
 </template>

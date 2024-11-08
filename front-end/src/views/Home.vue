@@ -5,7 +5,7 @@ import EnterSession from '@/components/Session/Enter.vue'
 import SelectBillCreationMethod from '@/components/Session/Bill/SelectBillCreationMethod.vue'
 import CreateBillManualInsertion from '@/components/Session/Bill/ManualInsertion/CreateBill.vue'
 import TransitionWrapper from '@/components/library/TransitionWrapper.vue'
-import { Record, ref } from 'vue'
+import { Record, ref, computed } from 'vue'
 
 type Pages =
   | 'select'
@@ -22,6 +22,12 @@ const pages: Record<Pages, any> = {
 }
 const currentPage = ref<Pages>('select')
 
+const progressOrder = ref<Pages[]>([
+  'createSession',
+  'selectBillCreationMethod',
+  'createBillManualInsertion',
+])
+
 const transition = ref<'slide-in-right-out-left' | 'slide-in-left-out-right'>(
   'slide-in-right-out-left'
 )
@@ -36,9 +42,26 @@ const setPage = (newPage: Pages, isReturn?: boolean) => {
     currentPage.value = newPage
   }, delay)
 }
+
+const getWidth = computed(() => {
+  return Math.round(
+    ((progressOrder.value.indexOf(currentPage.value) + 1) /
+      progressOrder.value.length) *
+      100
+  )
+})
 </script>
 <template>
   <div class="w-full flex flex-col px-6 items-center justify-center">
+    <div
+      class="absolute top-12 w-[85%] h-4 rounded-full cartoon-border"
+      :class="progressOrder.indexOf(currentPage) == -1 ? 'opacity-0' : ''"
+    >
+      <div
+        class="h-full rounded-full transition-all ease-in-out duration-700 bg-secondary"
+        :style="`width: ${getWidth}%;`"
+      ></div>
+    </div>
     <TransitionWrapper :name="transition">
       <component :is="pages[currentPage]" @setPage="setPage"></component>
     </TransitionWrapper>
