@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useUserStore } from '@/stores/user'
-import { useSessionStore } from '@/stores/session'
+import { useUserStore } from '../../stores/user'
+import { useSessionStore } from '../../stores/session'
 const emit = defineEmits(['setPage'])
 const userStore = useUserStore()
 const sessionStore = useSessionStore()

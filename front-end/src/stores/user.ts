@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import apiClient from '@/composables/useApi'
-import type { Item } from '@/composables/bill'
+import apiClient from '../composables/useApi'
+import type { Item } from './bill'
 
 export interface User {
   id: string
@@ -49,7 +49,7 @@ export const useUserStore = defineStore('UserStore', () => {
 
   function calculateTotal(): number {
     if (!user.value || user.value.items == null) return 0
-    const subtotal = user.value.items.reduce((total, item) => {
+    const subtotal = user.value.items.reduce((total: number, item: Item) => {
       return total + item.price * item.quantity
     }, 0)
     return subtotal

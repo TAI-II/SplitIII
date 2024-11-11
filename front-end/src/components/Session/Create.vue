@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useSessionStore } from '@/stores/session'
-import { useUserStore } from '@/stores/user'
+import { useSessionStore } from '../../stores/session'
+import { useUserStore } from '../../stores/user'
 const emit = defineEmits(['setPage'])
 const sessionStore = useSessionStore()
 const userStore = useUserStore()
@@ -18,7 +18,8 @@ const createSession = async () => {
   errorMsg.value = ''
 
   await sessionStore.createSession(name.value, session.value)
-  await userStore.createAdmin(name.value, sessionStore.session.creatorId)
+  if (sessionStore.session)
+    await userStore.createAdmin(name.value, sessionStore.session.creatorId)
   if (sessionStore.error) errorMsg.value = sessionStore.error
   else emit('setPage', 'selectBillCreationMethod')
 }

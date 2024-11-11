@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useBillStore } from '@/stores/bill'
-import { useSessionStore } from '@/stores/session'
+import { useBillStore } from '../../../../stores/bill'
+import { useSessionStore } from '../../../../stores/session'
 import { computed, watch, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import ToggleButton from '@/components/library/ToggleButton.vue'
+import ToggleButton from '../../../../components/library/ToggleButton.vue'
 
 const emit = defineEmits(['setPage'])
 const billStore = useBillStore()
@@ -67,11 +67,11 @@ watch(
 
 //handle couvert
 const hasCouvert = ref<boolean>(false)
-function onCouvertInput(value: string) {
-  let cleanValue = value.replace(/\D/g, '')
-  const numericValue = parseFloat(cleanValue) / 100
-  billStore.bill.aditionalCosts.couvert = numericValue
-}
+// function onCouvertInput(value: string) {
+//   let cleanValue = value.replace(/\D/g, '')
+//   const numericValue = parseFloat(cleanValue) / 100
+//   billStore.bill.aditionalCosts.couvert = numericValue
+// }
 watch(
   () => hasCouvert.value,
   () => {
@@ -83,6 +83,7 @@ watch(
 //handle link tab
 const router = useRouter()
 const linkBill = async () => {
+  if (sessionStore.session == null) return
   await billStore.linkBill()
   router.push(`/sessao/${sessionStore.session.id}`)
 }
@@ -162,7 +163,12 @@ const linkBill = async () => {
               id="priceInput"
               type="text"
               :value="formatedPrice(billStore.bill.items[i].price)"
-              @input="onPriceInput($event.target.value, i)"
+              @input="
+                (event: Event) => {
+                  const target = event.target as HTMLInputElement
+                  onPriceInput(target.value, i)
+                }
+              "
               @keypress="allowOnlyNumbers($event)"
               :class="item.price == 0 ? '' : 'bg-grey'"
               class="w-20 h-full hover:bg-grey text-center transition-all hover:outline-0 border border-grey rounded-md text-xs"

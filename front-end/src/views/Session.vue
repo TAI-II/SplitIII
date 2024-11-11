@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import { useBillStore } from '@/stores/bill'
-import { useUserStore } from '@/stores/user'
-import { useSessionStore } from '@/stores/session'
-import { computed, watch, ref, onMounted } from 'vue'
+import { useBillStore } from '../stores/bill'
+import { useUserStore } from '../stores/user'
+import { useSessionStore } from '../stores/session'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import ToggleButton from '@/components/library/ToggleButton.vue'
-import { useSessionSocket } from '@/composables/useSessionSocket'
+import { useSessionSocket } from '../composables/useSessionSocket'
 
 const emit = defineEmits(['setPage'])
 const billStore = useBillStore()
 const userStore = useUserStore()
 const sessionStore = useSessionStore()
 const route = useRoute()
-const sessionSocket = useSessionSocket(route.params.id)
+const sessionSocket = useSessionSocket(route.params.id as string)
 
 onMounted(async () => {
   if (userStore.user) {
     await sessionSocket.joinSession(userStore.user.id)
-    await sessionStore.fetchSession(route.params.id)
+    await sessionStore.fetchSession(route.params.id as string)
     console.log('user: ', userStore.user)
     console.log('bill: ', billStore.bill)
     console.log('sessionsocket: ', sessionSocket)
@@ -50,8 +49,10 @@ const linkBill = () => {}
       <div class="flex flex-row gap-4 items-center">
         <div class="w-16 h-16 bg-secondary rounded-full cartoon-border"></div>
         <div class="flex flex-col text-left">
-          <h1 class="text-xl">Cód. {{ sessionStore.session.code }}</h1>
-          <p>{{ sessionStore.session.name }}</p>
+          <h1 class="text-xl">
+            Cód. {{ sessionStore.session ? sessionStore.session.code : '' }}
+          </h1>
+          <p>{{ sessionStore.session ? sessionStore.session.name : '' }}</p>
         </div>
       </div>
       <button
@@ -108,6 +109,7 @@ const linkBill = () => {}
           class="flex w-full flex-col gap-3"
         >
           <div
+            v-if="userStore.user && userStore.user.items"
             v-for="(item, i) in userStore.user.items"
             :key="item.id"
             class="flex flex-row w-full h-6 items-center gap-3"

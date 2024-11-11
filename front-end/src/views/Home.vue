@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Select from '@/components/Session/Select.vue'
-import CreateSession from '@/components/Session/Create.vue'
-import EnterSession from '@/components/Session/Enter.vue'
-import SelectBillCreationMethod from '@/components/Session/Bill/SelectBillCreationMethod.vue'
-import CreateBillManualInsertion from '@/components/Session/Bill/ManualInsertion/CreateBill.vue'
-import TransitionWrapper from '@/components/library/TransitionWrapper.vue'
-import { Record, ref, computed } from 'vue'
+import Select from '../components/Session/Select.vue'
+import CreateSession from '../components/Session/Create.vue'
+import EnterSession from '../components/Session/Enter.vue'
+import SelectBillCreationMethod from '../components/Session/Bill/SelectBillCreationMethod.vue'
+import CreateBillManualInsertion from '../components/Session/Bill/ManualInsertion/CreateBill.vue'
+import TransitionWrapper from '../components/library/TransitionWrapper.vue'
+import { ref, computed } from 'vue'
 
 type Pages =
   | 'select'

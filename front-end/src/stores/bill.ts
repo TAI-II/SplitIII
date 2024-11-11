@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import apiClient from '@/composables/useApi'
-import { useSessionStore } from '@/stores/session'
+import apiClient from '../composables/useApi'
+import { useSessionStore } from '../stores/session'
 
 export interface Item {
   id: string
@@ -60,6 +60,7 @@ export const useBillStore = defineStore('BillStore', () => {
   }
 
   const linkBill = async () => {
+    if (sessionStore.session == null) return
     const body = {
       sessionId: sessionStore.session.id,
       tab: {

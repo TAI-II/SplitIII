@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import apiClient from '@/composables/useApi'
-import { useBillStore } from '@/stores/bill'
-import { useUserStore } from '@/stores/user'
+import apiClient from '../composables/useApi'
+import { useBillStore } from '../stores/bill'
+import { useUserStore } from '../stores/user'
 export interface Session {
   id: string
   creatorId: string
