@@ -107,7 +107,11 @@ export class SessionsService {
 
   generateUniqueCode(): string {
     this.logger.log('[-] Generating unique code');
-    const code = Math.random().toString(36).substring(2, 15);
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
     this.logger.debug(`[-] Unique code generated: ${code}`);
     return code;
   }
