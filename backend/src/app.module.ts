@@ -11,9 +11,7 @@ import { BillsModule } from './modules/bills/bills.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRoot(
-      'mongodb+srv://viniciusassis:KUm2RyLvJ9tGQOds@cluster0.6aj3k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-    ),
+    MongooseModule.forRoot(process.env.MONGO_DB_URL),
     OpenaiModule,
     SessionsModule,
     UserModule,
