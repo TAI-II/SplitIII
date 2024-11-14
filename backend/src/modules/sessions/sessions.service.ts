@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Session } from './schemas/session.schema';
 import { Model, Types } from 'mongoose';
 import { CreateSessionServiceDto } from './dto/create-session-service.dto';
+import { SessionCode } from './schemas/session-code.schema';
 
 @Injectable()
 export class SessionsService {
@@ -13,6 +14,7 @@ export class SessionsService {
 
   constructor(
     @InjectModel(Session.name) private sessionModel: Model<Session>,
+    @InjectModel(SessionCode.name) private sessionCodeModel: Model<SessionCode>,
   ) {}
 
   async create(data: CreateSessionServiceDto) {
@@ -25,6 +27,12 @@ export class SessionsService {
     };
     const createdSession = new this.sessionModel(newSession);
     const savedSession = await createdSession.save();
+
+    const sessionCode = new this.sessionCodeModel({
+      code: data.code,
+      sessionId: savedSession._id,
+    });
+    await sessionCode.save();
 
     this.logger.debug(`Session created: ${JSON.stringify(savedSession)}`);
     return savedSession;
@@ -99,8 +107,26 @@ export class SessionsService {
 
   generateUniqueCode(): string {
     this.logger.log('[-] Generating unique code');
-    const code = Math.random().toString(36).substring(2, 15);
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
     this.logger.debug(`[-] Unique code generated: ${code}`);
     return code;
+  }
+
+  async getSessionByCode(code: string): Promise<Session> {
+    const sessionCode = await this.sessionCodeModel.findOne({ code }).exec();
+    if (!sessionCode) {
+      throw new NotFoundException(`Session with code ${code} not found`);
+    }
+    
+    const session = await this.sessionModel.findById(sessionCode.sessionId).exec();
+    if (!session) {
+      throw new NotFoundException(`Session not found`);
+    }
+    
+    return session;
   }
 }

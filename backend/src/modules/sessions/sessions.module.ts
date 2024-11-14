@@ -9,10 +9,14 @@ import { SessionsGateway } from './sessions.gateway';
 import { SessionsService } from './sessions.service';
 import { BillsModule } from '../bills/bills.module';
 import { BillCalculatorService } from '../bills/bills.service';
+import { SessionCode, SessionCodeSchema } from './schemas/session-code.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Session.name, schema: SessionSchema }]),
+    MongooseModule.forFeature([
+      { name: Session.name, schema: SessionSchema },
+      { name: SessionCode.name, schema: SessionCodeSchema },
+    ]),
     UserModule,
     OpenaiModule,
     TabsModule,
