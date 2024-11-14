@@ -122,4 +122,16 @@ export class SessionsController {
     );
     return this.sessionService.patch(id, updateSessionDto);
   }
+
+  @Get('code/:code')
+  @ApiOperation({ summary: 'Retrieve a session by code' })
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'Session not found.' })
+  getByCode(@Param('code') code: string) {
+    this.logger.log(`[-] Retrieving session with code: ${code}`);
+    return this.sessionService.getSessionByCode(code);
+  }
 }
