@@ -9,6 +9,12 @@ export class BillCalculatorService {
 
   calculateBill(session: Partial<ISession>): IBillCalculation {
     const { tab, sessionUsers } = session;
+    
+    if (!tab || !tab.items || !sessionUsers) {
+      this.logger.error('Missing required session data', { tab, sessionUsers });
+      throw new Error('Invalid session data for bill calculation');
+    }
+
     const result: IBillCalculation = {
       users: [],
       sessionTotal: 0,

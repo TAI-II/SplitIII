@@ -270,6 +270,21 @@ export class SessionsGateway implements OnGatewayDisconnect {
         readyUsers: sessionData.users.filter((user) => user.isReady).length,
       });
 
+      // Check if all users are ready and calculate bill if they are
+      const allUsersReady = sessionData.users.every((user) => user.isReady);
+      if (allUsersReady) {
+        const session = await this.sessionService.findOne(sessionId);
+        const billCalculation = this.billCalculatorService.calculateBill({
+          tab: session.tab,
+          sessionUsers: sessionData.users,
+        });
+
+        this.server.emit(`session:${sessionId}:billCalculated`, {
+          success: true,
+          data: billCalculation,
+        });
+      }
+
       return { success: true, data: sessionData.users };
     } catch (error) {
       this.logger.error(
