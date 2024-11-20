@@ -129,4 +129,21 @@ export class SessionsService {
     
     return session;
   }
+
+  async resetSession(id: string) {
+    const session = await this.findOne(id);
+    
+    // Reset each user's state
+    const resetUsers = session.sessionUsers.map(user => ({
+      ...user,
+      isReady: false,
+      selectedItems: []
+    }));
+
+    return this.sessionModel.findByIdAndUpdate(
+      id,
+      { $set: { sessionUsers: resetUsers } },
+      { new: true }
+    );
+  }
 }
