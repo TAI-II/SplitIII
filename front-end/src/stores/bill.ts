@@ -94,6 +94,16 @@ export const useBillStore = defineStore('BillStore', () => {
     return subtotal
   }
 
+  function setBill(newBill: any): void {
+    bill.value = {
+      items: newBill.items,
+      aditionalCosts: {
+        tip: newBill.serviceFee,
+        couvert: null,
+      },
+    }
+  }
+
   return {
     bill,
     error,
@@ -101,5 +111,6 @@ export const useBillStore = defineStore('BillStore', () => {
     removeItem,
     linkBill,
     calculateTotal,
+    setBill,
   }
 })

@@ -134,4 +134,16 @@ export class SessionsController {
     this.logger.log(`[-] Retrieving session with code: ${code}`);
     return this.sessionService.getSessionByCode(code);
   }
+
+  @Post(':id/reset')
+  @ApiOperation({ summary: 'Reset a session users state' })
+  @ApiResponse({
+    status: 200,
+    description: 'The session users have been successfully reset.',
+  })
+  @ApiResponse({ status: 404, description: 'Session not found.' })
+  async resetSession(@Param('id') id: string) {
+    this.logger.log(`[-] Resetting session with id: ${id}`);
+    return this.sessionService.resetSession(id);
+  }
 }

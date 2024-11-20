@@ -18,7 +18,7 @@ const createSession = async () => {
   errorMsg.value = ''
 
   await sessionStore.createSession(name.value, session.value)
-  userStore.createAdmin(name.value, sessionStore.session.creatorId)
+  await userStore.createAdmin(name.value, sessionStore.session.creatorId)
   if (sessionStore.error) errorMsg.value = sessionStore.error
   else emit('setPage', 'selectBillCreationMethod')
 }

@@ -31,13 +31,13 @@ export function useSessionSocket(sessionId: string) {
   // Ouve o evento `session:{sessionId}:userJoined`
   socket.on(`session:${sessionId}:userJoined`, (data: any) => {
     console.log('User joined:', data)
-    usersJoined.value.push(data)
+    usersJoined.value.push(data.user)
   })
 
   // Ouve o evento `session:${sessionId}:userReady`
   socket.on(`session:${sessionId}:userReady`, (data: any) => {
     console.log('User ready:', data)
-    readyUsers.value.push(data)
+    readyUsers.value.push(data.user)
   })
 
   onUnmounted(() => {
