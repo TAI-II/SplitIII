@@ -279,6 +279,8 @@ export class SessionsGateway implements OnGatewayDisconnect {
           sessionUsers: sessionData.users,
         });
 
+        this.syncActiveSessions();
+
         this.server.emit(`session:${sessionId}:billCalculated`, {
           success: true,
           data: billCalculation,
