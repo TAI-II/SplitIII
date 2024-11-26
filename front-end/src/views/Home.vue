@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import Select from '@/components/Session/Select.vue'
-import CreateSession from '@/components/Session/Create.vue'
-import EnterSession from '@/components/Session/Enter.vue'
-import SelectBillCreationMethod from '@/components/Session/Bill/SelectBillCreationMethod.vue'
-import CreateBillManualInsertion from '@/components/Session/Bill/ManualInsertion/CreateBill.vue'
+import Select from '@/components/Home/Select.vue'
+import CreateSession from '@/components/Home/Create.vue'
+import EnterSession from '@/components/Home/Enter.vue'
+import SelectBillCreationMethod from '@/components/Home/Bill/SelectBillCreationMethod.vue'
+import CreateBillManualInsertion from '@/components/Home/Bill/ManualInsertion/CreateBill.vue'
 import TransitionWrapper from '@/components/library/TransitionWrapper.vue'
-import { Record, ref, computed } from 'vue'
+import { useSessionStore } from '@/stores/session'
+import { useUserStore } from '@/stores/user'
+import { useBillStore } from '@/stores/bill'
+import { Record, ref, computed, onMounted } from 'vue'
 
 type Pages =
   | 'select'
@@ -49,6 +52,28 @@ const getWidth = computed(() => {
       progressOrder.value.length) *
       100
   )
+})
+
+const sessionStore = useSessionStore()
+const userStore = useUserStore()
+const billStore = useBillStore()
+onMounted(() => {
+  sessionStore.session = null
+  userStore.user = null
+  billStore.bill = {
+    items: [
+      {
+        id: '1',
+        name: '',
+        quantity: 0,
+        price: 0,
+      },
+    ],
+    aditionalCosts: {
+      tip: null,
+      couvert: null,
+    },
+  }
 })
 </script>
 <template>

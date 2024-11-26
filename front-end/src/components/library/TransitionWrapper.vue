@@ -115,7 +115,9 @@ withDefaults(defineProps<Props>(), {
 }
 
 .slide-in-bottom-fade-out-enter-active {
-  animation: slide-in-bottom 0.5s;
+  animation:
+    slide-in-bottom 0.5s,
+    fade 0.5s ease-in-out;
 }
 .slide-in-bottom-fade-out-leave-active {
   animation: fade 0.5s reverse ease-in-out;

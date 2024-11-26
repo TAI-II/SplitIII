@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useSessionStore } from '@/stores/session'
+import { useRouter } from 'vue-router'
 const emit = defineEmits(['setPage'])
 const userStore = useUserStore()
 const sessionStore = useSessionStore()
@@ -10,14 +11,17 @@ const sessionCode = ref<string>('')
 const name = ref<string>('')
 
 const errorMsg = ref<string>('')
-const enterSession = () => {
-  if (sessionCode.value.length < 10)
-    return (errorMsg.value = 'Digite o código de 4 dígitos da sessão!')
+const router = useRouter()
+const enterSession = async () => {
+  if (sessionCode.value.length < 6)
+    return (errorMsg.value = 'Digite o código de 6 dígitos da sessão!')
   if (name.value.length < 3) return (errorMsg.value = 'Digite o seu nome!')
   errorMsg.value = ''
-  userStore.createUser(name.value)
-  sessionStore.fetchSession(sessionCode.value)
-  // userStore.joinSession(userStore.user.id, sessionCode.value)
+  await userStore.createUser(name.value)
+  const response = await sessionStore.fetchSession(sessionCode.value)
+  if (!response)
+    return (errorMsg.value = 'Não encontramos sessão com o código fornecido!')
+  router.push(`/sessao/${sessionCode.value}`)
 }
 </script>
 <template>
@@ -35,7 +39,7 @@ const enterSession = () => {
           ></i>
           <input
             v-model="sessionCode"
-            maxlength="10"
+            maxlength="6"
             placeholder="Código da sessão"
             class="pl-14 py-3 border w-full border-black rounded-2xl focus:outline-none"
           />

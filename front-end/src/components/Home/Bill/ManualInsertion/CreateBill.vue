@@ -84,7 +84,7 @@ watch(
 const router = useRouter()
 const linkBill = async () => {
   await billStore.linkBill()
-  router.push(`/sessao/${sessionStore.session.id}`)
+  router.push(`/sessao/${sessionStore.session.code}`)
 }
 </script>
 <template>
@@ -179,7 +179,7 @@ const linkBill = async () => {
         </button>
       </div>
       <div class="w-full p-4 pb-0 flex flex-col gap-8">
-        <div class="w-full flex flex-col gap-2 items-start">
+        <div v-if="false" class="w-full flex flex-col gap-2 items-start">
           <span class="w-full text-left font-urbanist font-black"
             >Incluir adicionais?</span
           >

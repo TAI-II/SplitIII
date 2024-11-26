@@ -8,6 +8,7 @@ export interface User {
   name: string
   admin: boolean
   items: Item[] | null
+  ready: boolean
 }
 
 export const useUserStore = defineStore('UserStore', () => {
@@ -21,10 +22,11 @@ export const useUserStore = defineStore('UserStore', () => {
     try {
       const response = await apiClient.post('/users', body)
       user.value = {
-        id: response.data.id,
+        id: response.data._id,
         name: response.data.name,
         admin: false,
         items: null,
+        ready: false,
       }
       console.log('/users', response)
     } catch (err: any) {
@@ -38,6 +40,7 @@ export const useUserStore = defineStore('UserStore', () => {
       name: name,
       admin: true,
       items: null,
+      ready: false,
     }
   }
 
