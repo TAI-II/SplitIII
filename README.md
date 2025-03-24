@@ -24,40 +24,6 @@ Slogan: "Pagamentos Simplificados, Contas Divididas, Experiência Perfeita."
 
 
 ### Sumário Documentação 
-
-- [Aplicativo Split](#aplicativo-split)
-  - [Autores](#autores)
-  - [Informações referênciais](#informações-referênciais)
-    - [Sumário Documentação](#sumário-documentação)
-      - [1. Produto](#1-produto)
-        - [1.1 Visão Geral do Produto](#11-visão-geral-do-produto)
-        - [1.2 Canva](#12-canva)
-      - [2. Fluxos](#2-fluxos)
-        - [2.1 Fluxos Definidos](#21-fluxos-definidos)
-      - [3. Tecnologias](#3-tecnologias)
-        - [3.1 Tecnologias Frontend](#31-tecnologias-frontend)
-        - [3.2 Tecnologias Backend](#32-tecnologias-backend)
-      - [4. Arquitetura](#4-arquitetura)
-        - [4.1 Arquitetura Definida](#41-arquitetura-definida)
-      - [5. Design](#5-design)
-        - [5.1 Logo](#51-logo)
-        - [5.2 Componentes UI](#52-componentes-ui)
-      - [6. Levantamento](#6-levantamento)
-        - [6.1 Requisitos](#61-requisitos)
-        - [6.2 Descritivo Funcional](#62-descritivo-funcional)
-      - [7. Fotos](#7-fotos)
-        - [7.1 Diretotio de fotos](#71-diretotio-de-fotos)
-  - [Objetivos:](#objetivos)
-  - [Funcionalidades](#funcionalidades)
-  - [Tecnologias Utilizadas](#tecnologias-utilizadas)
-    - [Frontend](#frontend)
-    - [Backend](#backend)
-    - [Outros](#outros)
-  - [Instalação](#instalação)
-    - [Pré-requisitos](#pré-requisitos)
-    - [Passos](#passos)
-
-
 #### 1. Produto
 ##### [1.1 Visão Geral do Produto](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/1.%20Produto/1.1.%20Vis%C3%A3o%20Geral%20do%20Produto.md)
 ##### [1.2 Canva](https://github.com/TAI-II/Split/blob/main/Documenta%C3%A7%C3%A3o/1.%20Produto/1.2.%20Canva.md)
