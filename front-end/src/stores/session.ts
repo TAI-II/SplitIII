@@ -36,6 +36,7 @@ export const useSessionStore = defineStore('SessionStore', () => {
         name: response.data.name,
       }
     } catch (err: any) {
+      console.log(err)
       error.value = err.message
     }
   }

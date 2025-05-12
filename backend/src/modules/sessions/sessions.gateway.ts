@@ -17,7 +17,7 @@ import { BillCalculatorService } from '../bills/bills.service';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://192.168.0.12:5173', // Permite acesso do frontend
+    origin: ['http://localhost:5173', 'http://192.168.0.6:5173'],
     methods: ['GET', 'POST'],
     credentials: true,
   },

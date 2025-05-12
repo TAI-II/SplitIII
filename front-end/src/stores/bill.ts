@@ -8,10 +8,11 @@ export interface Item {
   name: string
   quantity: number
   price: number
+  totalPrice?: number
 }
 
 export interface AditionalCosts {
-  tip: number | null
+  tip: number
   couvert: number | null
 }
 
@@ -29,10 +30,11 @@ export const useBillStore = defineStore('BillStore', () => {
         name: '',
         quantity: 0,
         price: 0,
+        totalPrice: 0,
       },
     ],
     aditionalCosts: {
-      tip: null,
+      tip: 0,
       couvert: null,
     },
   })
@@ -45,7 +47,19 @@ export const useBillStore = defineStore('BillStore', () => {
       name: '',
       quantity: 0,
       price: 0,
+      totalPrice: 0,
     })
+    id.value++
+  }
+
+  const addItem = (item: Item) => {
+    item.id = id.value + ''
+    if (bill.value.items.some(i => i.name !== '')) {
+      bill.value.items.push(item)
+    } else {
+      item.id = '1'
+      bill.value.items[0] = item
+    }
     id.value++
   }
 
@@ -82,8 +96,7 @@ export const useBillStore = defineStore('BillStore', () => {
   const calculateTotal = (): number => {
     const subtotal = calculateSubtotal()
     const tip = bill.value.aditionalCosts.tip
-      ? (bill.value.aditionalCosts.tip / 100) * subtotal
-      : 0
+
     return subtotal + tip
   }
 
@@ -104,6 +117,10 @@ export const useBillStore = defineStore('BillStore', () => {
     }
   }
 
+  function setItems(items: Item[]): void {
+    bill.value.items = items
+  }
+
   return {
     bill,
     error,
@@ -112,5 +129,7 @@ export const useBillStore = defineStore('BillStore', () => {
     linkBill,
     calculateTotal,
     setBill,
+    setItems,
+    addItem,
   }
 })

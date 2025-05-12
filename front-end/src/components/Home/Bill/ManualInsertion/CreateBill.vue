@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useBillStore } from '@/stores/bill'
 import { useSessionStore } from '@/stores/session'
-import { computed, watch, ref } from 'vue'
+import { useNfsOcrStore } from '@/stores/nfsOcr'
+import { computed, watch, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ToggleButton from '@/components/library/ToggleButton.vue'
 
 const emit = defineEmits(['setPage'])
 const billStore = useBillStore()
 const sessionStore = useSessionStore()
+const nfsOcrStore = useNfsOcrStore()
 
 const lastItem = computed(() => {
   return !billStore.bill.items || billStore.bill.items.length < 2
@@ -52,16 +54,16 @@ function allowOnlyNumbers(event: KeyboardEvent) {
 
 //handle tip
 const hasTip = ref<boolean>(false)
-function onTipInput(event: Event) {
-  const input = event.target as HTMLInputElement
-  const numericValue = parseInt(input.value.replace(/\D/g, '').slice(0, 2), 10)
-  billStore.bill.aditionalCosts.tip = isNaN(numericValue) ? 0 : numericValue // Define como 0 se o valor for NaN
+function onTipInput(value: string) {
+  let cleanValue = value.replace(/\D/g, '')
+  const numericValue = parseFloat(cleanValue) / 100
+  billStore.bill.aditionalCosts.tip = numericValue
 }
+
 watch(
   () => hasTip.value,
   () => {
-    if (!hasTip.value) billStore.bill.aditionalCosts.tip = null
-    else billStore.bill.aditionalCosts.tip = 10
+    if (!hasTip.value) billStore.bill.aditionalCosts.tip = 0
   }
 )
 
@@ -86,11 +88,21 @@ const linkBill = async () => {
   await billStore.linkBill()
   router.push(`/sessao/${sessionStore.session.code}`)
 }
+
+//auto add tip from ocr
+onMounted(() => {
+  if (billStore.bill.aditionalCosts.tip > 0) {
+    hasTip.value = true
+  }
+})
 </script>
 <template>
   <div
     class="w-full flex flex-col gap-8 items-center justify-start pt-32 pb-48"
   >
+    <h3 v-if="nfsOcrStore.successOcr">
+      Confira a comanda e corrija caso necessário
+    </h3>
     <div
       class="py-4 w-full flex flex-col gap-4 bg-white cartoon-border text-left rounded-xl"
     >
@@ -106,7 +118,7 @@ const linkBill = async () => {
             >Qtd</span
           >
           <span class="text-center font-urbanist shrink-0 font-black w-20"
-            >Preço (R$)</span
+            >Preço (Un)</span
           >
         </div>
         <transition-group
@@ -179,28 +191,25 @@ const linkBill = async () => {
         </button>
       </div>
       <div class="w-full p-4 pb-0 flex flex-col gap-8">
-        <div v-if="false" class="w-full flex flex-col gap-2 items-start">
+        <div class="w-full flex flex-col gap-2 items-start">
           <span class="w-full text-left font-urbanist font-black"
             >Incluir adicionais?</span
           >
           <div class="flex flex-row w-full justify-between items-center">
-            <p>Gorjeta (%)</p>
+            <p>Gorjeta (R$)</p>
             <div class="flex flex-row items-center gap-2">
               <div
-                :class="hasTip ? 'max-w-[50px]' : 'max-w-0'"
+                :class="hasTip ? 'max-w-[100px]' : 'max-w-0'"
                 class="transition-all relative overflow-hidden"
               >
                 <input
                   id="percentageInput"
-                  type="number"
-                  v-model="billStore.bill.aditionalCosts.tip"
-                  @input="onTipInput"
-                  class="h-7 text- w-10 flex pl-2 transition-all over bg-grey hover:outline-0 rounded-md text-xs"
+                  type="text"
+                  :value="formatedPrice(billStore.bill.aditionalCosts.tip)"
+                  @input="onTipInput($event.target.value)"
+                  @keypress="allowOnlyNumbers($event)"
+                  class="h-7 text- w-16 flex pl-2 transition-all over bg-grey hover:outline-0 rounded-md text-xs"
                 />
-                <span
-                  class="absolute right-1 top-1/2 mt-[1px] transform -translate-y-1/2 text-xs"
-                  >%</span
-                >
               </div>
               <ToggleButton v-model="hasTip" />
             </div>

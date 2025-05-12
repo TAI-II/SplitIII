@@ -5,6 +5,7 @@ import EnterSession from '@/components/Home/Enter.vue'
 import SelectBillCreationMethod from '@/components/Home/Bill/SelectBillCreationMethod.vue'
 import CreateBillManualInsertion from '@/components/Home/Bill/ManualInsertion/CreateBill.vue'
 import TransitionWrapper from '@/components/library/TransitionWrapper.vue'
+import TakePhoto from '@/components/Home/Bill/Ocr/TakePhoto.vue'
 import { useSessionStore } from '@/stores/session'
 import { useUserStore } from '@/stores/user'
 import { useBillStore } from '@/stores/bill'
@@ -16,18 +17,21 @@ type Pages =
   | 'enterSession'
   | 'selectBillCreationMethod'
   | 'createBillManualInsertion'
+  | 'takePhoto'
 const pages: Record<Pages, any> = {
   select: Select,
   createSession: CreateSession,
   enterSession: EnterSession,
   selectBillCreationMethod: SelectBillCreationMethod,
   createBillManualInsertion: CreateBillManualInsertion,
+  takePhoto: TakePhoto,
 }
 const currentPage = ref<Pages>('select')
 
 const progressOrder = ref<Pages[]>([
   'createSession',
   'selectBillCreationMethod',
+  'takePhoto',
   'createBillManualInsertion',
 ])
 
