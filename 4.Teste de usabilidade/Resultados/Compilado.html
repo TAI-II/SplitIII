@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Interativo de Usabilidade - Split</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutral -->
+    <!-- Application Structure Plan: A dashboard-style, single-page application with a sticky top navigation for easy access to different sections. This structure allows users to quickly jump to the most relevant information (e.g., overall ratings, specific group feedback, or final recommendations) instead of reading a long linear document. The key sections are: 1. Overview with KPI cards for an instant summary. 2. Interactive Group Analysis with buttons to dynamically switch between group details, making comparison intuitive. 3. A dedicated Ratings Dashboard with interactive charts for clear data visualization. 4. A Key Findings section using collapsible accordions to organize critical issues, positives, and suggestions neatly. 5. A final Recommendations section. This user-centric design prioritizes exploration and efficient data consumption for stakeholders like developers and product managers. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Overall stats (participants, groups). Goal: Inform. Method: KPI cards. Interaction: None. Justification: Quick high-level summary.
+        - Report Info: Group-specific details. Goal: Organize/Compare. Method: Clickable buttons to show/hide group data dynamically via JS. Justification: Avoids a long wall of text and facilitates comparison.
+        - Report Info: Quantitative ratings across groups. Goal: Compare. Method: Grouped Bar Chart (Chart.js). Interaction: Hover tooltips. Justification: Best for comparing scores across multiple groups and categories.
+        - Report Info: Developer group individual ratings. Goal: Analyze within a group. Method: Radar Chart (Chart.js). Interaction: Hover tooltips. Justification: Ideal for comparing multiple variables for a small number of subjects.
+        - Report Info: Consolidated findings (bugs, positives). Goal: Organize. Method: Collapsible accordions (HTML/JS). Interaction: Click to expand/collapse. Justification: Manages information density, allowing users to focus.
+        - Report Info: Recommendations. Goal: Inform. Method: Styled list. Justification: Clear and actionable presentation.
+        - Library/Method: Chart.js for all charts. Vanilla JS for all interactions. Tailwind CSS for styling. NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 40vh;
+            width: 100%;
+            max-height: 450px;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #0284c7; /* sky-600 */
+        }
+        .group-btn-active {
+            background-color: #0369a1 !important; /* sky-700 */
+            color: white !important;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-900">Relatório Split</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600">Visão Geral</a>
+                        <a href="#group-analysis" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600">Análise dos Grupos</a>
+                        <a href="#ratings" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600">Avaliações</a>
+                        <a href="#findings" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600">Descobertas Chave</a>
+                        <a href="#recommendations" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600">Recomendações</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Section: Overview -->
+        <section id="overview" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Visão Geral do Teste de Usabilidade</h2>
+            <p class="text-lg text-slate-600 mb-8">Um resumo dos principais números e do escopo do teste realizado para o aplicativo Split na PUC Minas.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-sky-500">
+                    <h3 class="text-slate-500 text-sm font-medium uppercase">Total de Participantes</h3>
+                    <p class="text-3xl font-bold text-slate-900 mt-2">23</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-teal-500">
+                    <h3 class="text-slate-500 text-sm font-medium uppercase">Grupos de Teste</h3>
+                    <p class="text-3xl font-bold text-slate-900 mt-2">4</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-500">
+                    <h3 class="text-slate-500 text-sm font-medium uppercase">Duração Média Geral</h3>
+                    <p class="text-3xl font-bold text-slate-900 mt-2">Aprox. 21 min</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-rose-500">
+                    <h3 class="text-slate-500 text-sm font-medium uppercase">Principal Feedback</h3>
+                    <p class="text-lg font-semibold text-slate-900 mt-2">Bugs de cálculo e clareza</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Group Analysis -->
+        <section id="group-analysis" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Análise Detalhada por Grupo</h2>
+            <p class="text-lg text-slate-600 mb-8">Explore os resultados específicos de cada grupo de teste. Clique em um grupo para ver seus dados, os problemas encontrados e as sugestões fornecidas.</p>
+            <div class="flex flex-wrap gap-2 mb-8" id="group-selector">
+            </div>
+            <div id="group-details-content" class="bg-white p-6 md:p-8 rounded-lg shadow-lg transition-all duration-300">
+            </div>
+        </section>
+
+        <!-- Section: Ratings -->
+        <section id="ratings" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Painel de Avaliações</h2>
+            <p class="text-lg text-slate-600 mb-8">Visualize e compare as notas que os grupos deram ao aplicativo em quatro critérios essenciais de usabilidade.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">Comparativo de Avaliações Médias por Grupo</h3>
+                    <p class="text-sm text-slate-500 mb-4">As notas do Grupo 1 foram normalizadas para uma escala de 0 a 5 para comparação.</p>
+                    <div class="chart-container">
+                        <canvas id="groupComparisonChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">Análise do Grupo de Desenvolvedores</h3>
+                     <p class="text-sm text-slate-500 mb-4">O gráfico de radar mostra como cada membro do grupo de perfil técnico avaliou o aplicativo.</p>
+                    <div class="chart-container">
+                        <canvas id="developerRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Key Findings -->
+        <section id="findings" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Descobertas Chave</h2>
+            <p class="text-lg text-slate-600 mb-8">Um resumo consolidado dos pontos mais importantes levantados durante os testes. Clique em cada categoria para expandir e ver os detalhes.</p>
+            <div class="space-y-4" id="accordion-container">
+            </div>
+        </section>
+
+        <!-- Section: Recommendations -->
+        <section id="recommendations" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Recomendações e Próximos Passos</h2>
+            <p class="text-lg text-slate-600 mb-8">Com base nos feedbacks, estas são as ações recomendadas para aprimorar o aplicativo Split.</p>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <ol id="recommendations-list" class="list-decimal list-inside space-y-4 text-slate-700">
+                </ol>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm">
+            <p>Relatório Interativo gerado em <span id="generation-date"></span>.</p>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const appData = {
+        groups: [
+            {
+                id: 'g1',
+                name: 'Grupo 1: "Confia 9/6"',
+                composition: 'Predominantemente sexo masculino',
+                avgAge: '21 anos',
+                testTime: '15 minutos',
+                preference: 'Escaneamento via OCR',
+                bugs: [
+                    'Fechamento inesperado do aplicativo.',
+                    'Demora no carregamento.',
+                    'Contagem de casas decimais infinitas.',
+                    'Dificultade no dividir item',
+                    'Divisão não correspondendo ao valor real.'
+                ],
+                suggestions: [
+                    'Revisar a funcionalidade de "dividir item" para maior clareza.',
+                    'Implementar uma função para reportar bugs.'
+                ],
+                ratings: { 'Facilidade de Uso': 4, 'Clareza': 4, 'Design': 5, 'Satisfação': 4 }
+            },
+            {
+                id: 'g2',
+                name: 'Grupo 2: "Mesa 7"',
+                composition: '10 pessoas (3 mulheres, 7 homens)',
+                avgAge: 'Perfil misto, com idades Aprox. 22+',
+                testTime: '20 minutos',
+                preference: 'Escaneamento via OCR',
+                bugs: [
+                    'Quantidade de casas decimais indefinidas na divisão.',
+                    'Divisão não limita o número de pessoas corretamente.',
+                    'Demora no carregamento.',
+                    'Contagem de casas decimais infinitas.',
+                    'Dificuldade em entrar na sessão.',
+                    'Bugs visuais quando participantes entram na sala tardiamente.'
+                ],
+                suggestions: [
+                    'Adicionar um botão "Voltar" para redividir.',
+                    'Permitir que uma única pessoa gerencie a divisão para todos.',
+                    'Atualização da divisão em tempo real, sem necessidade de clique.'
+                ],
+                ratings: { 'Facilidade de Uso': 4, 'Clareza': 4, 'Design': 5, 'Satisfação': 4.5 }
+            },
+            {
+                id: 'g3',
+                name: 'Grupo 3: Desenvolvedores',
+                composition: '4 integrantes com experiência em programação',
+                avgAge: '21-25 anos',
+                testTime: '30 minutos',
+                preference: 'Escaneamento via OCR',
+                bugs: [
+                    'Má interpretação da função "gorjeta".',
+                    'Erro no escaneamento OCR (tela fechou).',
+                    'Tela de divisão não finaliza, fica em loop de atualização.',
+                    'Sincronização de seleção de itens não funcionou bem.',
+                    'Desejo por um app nativo em vez de web app.'
+                ],
+                suggestions: [
+                    'As sugestões foram implícitas nos problemas detalhados levantados.'
+                ],
+                ratings: { 'Facilidade de Uso': 4, 'Clareza': 3, 'Design': 5, 'Satisfação': 3 }
+            },
+            {
+                id: 'g4',
+                name: 'Grupo 4: "3M"',
+                composition: '4 integrantes',
+                avgAge: 'Não especificado',
+                testTime: '20 minutos',
+                preference: 'Escaneamento via OCR',
+                bugs: [
+                    'App não funciona sem internet (ponto fraco).',
+                    'Administrador não aparece identificado na sala.',
+                    'Administrador/host saindo da sessão constantemente.',
+                    'Pequeno erro visual na versão mobile.',
+                    'Usuários não sabiam o que os outros haviam selecionado.'
+                ],
+                suggestions: [
+                    'Implementar uma função de feedback dentro do aplicativo.',
+                    'Má interpretação da função "gorjeta".',
+                    'Erro no escaneamento OCR (tela fechou).',
+                    'Tela de divisão não finaliza, fica em loop de atualização.',
+                    'Quantidade de casas decimais indefinidas na divisão.',
+                ],
+                ratings: { 'Facilidade de Uso': 4, 'Clareza': 3, 'Design': 5, 'Satisfação': 4 }
+            }
+        ],
+        keyFindings: {
+            positives: {
+                title: 'Pontos Positivos',
+                icon: '&#x2714;',
+                color: 'teal',
+                content: [
+                    'A aparência do design foi consistentemente elogiada, recebendo nota máxima de múltiplos grupos.',
+                    'A interface foi considerada visualmente agradável e intuitiva em sua estética.',
+                    'A preferência geral pelo escaneamento via OCR demonstra que a funcionalidade é bem-vinda e vista como útil.'
+                ]
+            },
+            criticals: {
+                title: 'Problemas Críticos (Prioridade Alta)',
+                icon: '&#x26A0;',
+                color: 'rose',
+                content: [
+                    'Bugs de Cálculo: Problemas recorrentes com casas decimais infinitas e divisões incorretas foram o ponto mais crítico.',
+                    'Clareza da Interface: A funcionalidade de "dividir item" foi consistentemente apontada como confusa.',
+                    'Bugs de Conectividade e Desempenho: Fechamentos inesperados, lentidão e a total dependência de internet frustraram os usuários.'
+                ]
+            },
+            suggestions: {
+                title: 'Sugestões dos Usuários (Oportunidades)',
+                icon: '&#x1F4A1;',
+                color: 'amber',
+                content: [
+                    'Implementar uma ferramenta nativa para reportar bugs.',
+                    'Permitir que um único "host" gerencie toda a divisão, apenas adicionando os nomes dos participantes.',
+                    'Adicionar feedback visual em tempo real, mostrando o que cada pessoa seleciona e atualizando a conta instantaneamente.',
+                    'Criar um botão "Voltar" claro para facilitar correções na divisão.'
+                ]
+            }
+        },
+        recommendations: [
+            'Correção de Bugs Críticos: Priorizar a resolução dos bugs de cálculo e casas decimais.',
+            'Revisão da Interface: Redesenhar a funcionalidade "Dividir Item" para ser mais intuitiva.',
+            'Melhoria da Estabilidade: Otimizar o desempenho e a estabilidade, especialmente em conexões de internet mais fracas.',
+            'Implementação de Feedback em Tempo Real: Melhorar a sincronização e adicionar atualizações instantâneas.',
+            'Refinamento do Gerenciamento de Sessão: Assegurar que o host seja identificado e não seja desconectado.',
+            'Desenvolvimento de Ferramentas de Suporte: Incluir uma funcionalidade nativa para reportar bugs.',
+            'Otimização para Mobile: Corrigir os erros visuais e considerar o desenvolvimento de uma PWA (Progressive Web App) para uma experiência mais próxima da nativa.',
+            'Revisão da API de OCR: Monitorar o desempenho e considerar alternativas se os erros persistirem.',
+            'Nova Funcionalidade: Apenas um dividir e adicionar os outros.'
+        ],
+        developerRatings: [
+            { member: 'Membro 1 (24 anos)', ratings: [5, 3, 5, 3] },
+            { member: 'Membro 2 (21 anos)', ratings: [3, 3, 5, 3] },
+            { member: 'Membro 3 (25 anos)', ratings: [5, 3, 5, 3] },
+            { member: 'Membro 4 (21 anos)', ratings: [5, 3, 5, 3] },
+        ]
+    };
+    
+    const groupSelector = document.getElementById('group-selector');
+    const groupDetailsContent = document.getElementById('group-details-content');
+
+    function renderGroupDetails(groupId) {
+        const group = appData.groups.find(g => g.id === groupId);
+        if (!group) return;
+        
+        const ratingsHtml = Object.entries(group.ratings).map(([key, value]) => `
+            <div class="flex justify-between items-center py-2 border-b border-slate-200">
+                <span class="text-sm font-medium text-slate-600">${key}</span>
+                <span class="text-sm font-bold text-sky-600">${value} / 5</span>
+            </div>
+        `).join('');
+
+        groupDetailsContent.innerHTML = `
+            <h3 class="text-2xl font-bold text-slate-900 mb-6">${group.name}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <div>
+                    <h4 class="font-semibold text-slate-700 mb-3">Informações Gerais</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li><strong>Composição:</strong> ${group.composition}</li>
+                        <li><strong>Idade Média:</strong> ${group.avgAge}</li>
+                        <li><strong>Tempo de Teste:</strong> ${group.testTime}</li>
+                        <li><strong>Preferência:</strong> ${group.preference}</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-700 mb-3">Avaliações (0-5)</h4>
+                    <div class="space-y-1">${ratingsHtml}</div>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-700 mb-3">Bugs Identificados</h4>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-rose-600">
+                        ${group.bugs.map(b => `<li>${b}</li>`).join('')}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-700 mb-3">Sugestões do Grupo</h4>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-teal-600">
+                        ${group.suggestions.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+        
+        document.querySelectorAll('.group-btn').forEach(btn => {
+            btn.classList.remove('group-btn-active');
+            if (btn.dataset.groupId === groupId) {
+                btn.classList.add('group-btn-active');
+            }
+        });
+    }
+
+    appData.groups.forEach(group => {
+        const button = document.createElement('button');
+        button.textContent = group.name.split(':')[0];
+        button.dataset.groupId = group.id;
+        button.className = 'group-btn px-4 py-2 text-sm font-medium rounded-md bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition';
+        button.addEventListener('click', () => renderGroupDetails(group.id));
+        groupSelector.appendChild(button);
+    });
+
+    renderGroupDetails(appData.groups[0].id);
+
+    function createGroupComparisonChart() {
+        const ctx = document.getElementById('groupComparisonChart').getContext('2d');
+        const labels = ['Facilidade de Uso', 'Clareza', 'Design', 'Satisfação'];
+        const datasets = appData.groups.map((group, index) => {
+            const colors = ['#38bdf8', '#2dd4bf', '#f59e0b', '#f43f5e'];
+            return {
+                label: group.name.split(':')[0],
+                data: Object.values(group.ratings),
+                backgroundColor: colors[index],
+                borderColor: colors[index],
+                borderWidth: 1
+            }
+        });
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        grid: { color: '#e2e8f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function createDeveloperRadarChart() {
+        const ctx = document.getElementById('developerRadarChart').getContext('2d');
+        const labels = ['Facilidade de Uso', 'Clareza', 'Design', 'Satisfação'];
+        const datasets = appData.developerRatings.map((dev, index) => {
+             const colors = [
+                'rgba(56, 189, 248, 0.5)', 
+                'rgba(45, 212, 191, 0.5)',
+                'rgba(245, 158, 11, 0.5)',
+                'rgba(244, 63, 94, 0.5)'
+            ];
+            const borderColors = [
+                'rgb(56, 189, 248)', 
+                'rgb(45, 212, 191)',
+                'rgb(245, 158, 11)',
+                'rgb(244, 63, 94)'
+            ];
+            return {
+                label: dev.member,
+                data: dev.ratings,
+                backgroundColor: colors[index],
+                borderColor: borderColors[index],
+                pointBackgroundColor: borderColors[index],
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: borderColors[index],
+                borderWidth: 2
+            };
+        });
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                 elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { size: 12 }
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: {
+                            stepSize: 1,
+                            backdropColor: 'rgba(255, 255, 255, 0.75)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+    }
+    
+    function createAccordions() {
+        const container = document.getElementById('accordion-container');
+        Object.values(appData.keyFindings).forEach(item => {
+            const colors = {
+                rose: 'border-rose-500',
+                teal: 'border-teal-500',
+                amber: 'border-amber-500'
+            };
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <div class="accordion-header flex justify-between items-center cursor-pointer bg-white p-4 rounded-lg shadow-md border-l-4 ${colors[item.color]}">
+                    <h3 class="font-bold text-lg text-slate-800">${item.icon} ${item.title}</h3>
+                    <span class="transform transition-transform duration-300">&#x25BC;</span>
+                </div>
+                <div class="accordion-content hidden bg-white border-x border-b border-slate-200 rounded-b-lg p-4 -mt-1">
+                    <ul class="list-disc list-inside space-y-2 text-slate-600">
+                         ${item.content.map(c => `<li>${c}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('span');
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+    }
+    
+    function populateRecommendations() {
+        const list = document.getElementById('recommendations-list');
+        appData.recommendations.forEach(rec => {
+            const li = document.createElement('li');
+            li.innerHTML = rec;
+            list.appendChild(li);
+        });
+    }
+    
+    function setDate() {
+        const dateEl = document.getElementById('generation-date');
+        const now = new Date();
+        dateEl.textContent = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+    }
+
+    createGroupComparisonChart();
+    createDeveloperRadarChart();
+    createAccordions();
+    populateRecommendations();
+    setDate();
+});
+</script>
+</body>
+</html>
